@@ -10,7 +10,7 @@ const theme = createTheme({
         paper: '#18181', // Colore di sfondo per i componenti Paper
       },
       text: {
-        primary: 'white', // Colore del testo primario
+        primary: '#FFFFFF', // Colore del testo primario
       },
     },
     mixins: {

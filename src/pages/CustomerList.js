@@ -8,9 +8,9 @@ import { db } from "../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import  { StyledDataGrid, theme } from '../components/StyledDataGrid';
-  
+import ShareIcon from "@mui/icons-material/Share";
+import { StyledDataGrid, theme } from '../components/StyledDataGrid';
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 export function CustomerList() {
   const [customers, setCustomers] = useState([]);
@@ -35,24 +35,27 @@ export function CustomerList() {
     fetchCustomers();
   }, []);
 
-  // Funzione per gestire la visibilità della password
   const handleTogglePassword = (id) => {
     setShowPassword((prev) => ({
       ...prev,
-      [id]: !prev[id], // Alterna la visibilità della password per l'utente selezionato
+      [id]: !prev[id],
     }));
   };
 
-  // Funzione per copiare il testo negli appunti
-  const handleCopy = (username, password) => {
-    const copyText = `Username: ${username}\nPassword: ${password}`;
-    navigator.clipboard.writeText(copyText).then(() => {
-      // Mostra la notifica "copiato negli appunti"
-      setSnackbarOpen(true);
-    });
+  const handleShare = (telefono, username, password) => {
+    const message = `Marzano Automotive\nUsername: ${username}\nPassword: ${password}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${telefono}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
   };
 
-  // Definizione delle colonne
+  const handleWhatsApp = (telefono) => {
+    const message = 'Ciao! Questo è un messaggio automatico.';
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${telefono}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "username", headerName: "Username", width: 130 },
@@ -64,38 +67,14 @@ export function CustomerList() {
         const isPasswordVisible = showPassword[params.row.id];
 
         return (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            {/* Mostra la password censurata o visibile */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
             <span>{isPasswordVisible ? params.value : "*********"}</span>
-
             <div>
-              {/* Aggiunge l'icona occhio per alternare la visibilità */}
-              <IconButton
-                onClick={() => handleTogglePassword(params.row.id)}
-                aria-label="toggle password visibility"
-                size="small"
-                sx={{ padding: 0 }}
-              >
+              <IconButton onClick={() => handleTogglePassword(params.row.id)} aria-label="toggle password visibility" size="small" sx={{ padding: 0 }}>
                 {isPasswordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
-
-              {/* Aggiunge il pulsante di copia */}
-              <IconButton
-                onClick={() =>
-                  handleCopy(params.row.username, params.row.password)
-                }
-                aria-label="copy credentials"
-                size="small"
-                sx={{ padding: 0, marginLeft: 1 }} // Aggiunge un po' di spazio a sinistra
-              >
-                <ContentCopyIcon />
+              <IconButton onClick={() => handleShare(params.row.telefono, params.row.username, params.row.password)} aria-label="share credentials" size="small" sx={{ padding: 0, marginLeft: 1 }}>
+                <ShareIcon />
               </IconButton>
             </div>
           </div>
@@ -104,48 +83,39 @@ export function CustomerList() {
     },
     { field: "nome", headerName: "Nome", width: 130 },
     { field: "cognome", headerName: "Cognome", width: 130 },
-    { field: "telefono", headerName: "Telefono", width: 130 },
+    {
+      field: "telefono",
+      headerName: "Telefono",
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+          <span>{params.value}</span>
+          <IconButton onClick={() => handleWhatsApp(params.value)} aria-label="send WhatsApp message" size="small" sx={{ padding: 0 }}>
+            <WhatsAppIcon />
+          </IconButton>
+        </div>
+      ),
+    },
     { field: "email", headerName: "Email", width: 130 },
   ];
 
   return (
     <ThemeProvider theme={theme}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7 }}
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
         <div className="container-fluid">
           <h2>Anagrafica Clienti</h2>
-          <Paper
-  sx={{
-    height: 500,
-    width: "94%",
-    borderRadius: '8px',
-    overflow: 'hidden', // Nasconde lo scroll
-  }}
->
-  <StyledDataGrid
-    rows={customers}
-    columns={columns}
-    pageSize={5}
-    checkboxSelection
-    disableRowSelectionOnClick
-    localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
-    sx={{
-      width: '100%', // Assicura che il DataGrid prenda tutta la larghezza disponibile
-      overflowX: 'hidden', // Nasconde lo scroll orizzontale
-    }}
-  />
-</Paper>
-
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={2000}
-            onClose={() => setSnackbarOpen(false)}
-            message="Copiato negli appunti!"
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          />
+          <Paper sx={{ height: 500, width: "94%", borderRadius: '8px', overflow: 'hidden' }}>
+            <StyledDataGrid
+              rows={customers}
+              columns={columns}
+              pageSize={5}
+              checkboxSelection
+              disableRowSelectionOnClick
+              localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
+              sx={{ width: '100%', overflowX: 'hidden' }}
+            />
+          </Paper>
+          <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)} message="Copiato negli appunti!" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} />
         </div>
       </motion.div>
     </ThemeProvider>

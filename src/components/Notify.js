@@ -16,11 +16,10 @@ export function notifyError () {
 }
 
 //------------------------------------------------------------------------
-export function notifyErrorAddCliente () {
-    toast.error('Inserisci tutti i campi obbligatori', {
+export function notifyErrorAddCliente (text) {
+    toast.error(text, {
         position: "top-center",
         autoClose: 3000,
-        autoClose: false,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

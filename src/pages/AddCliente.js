@@ -40,6 +40,8 @@ export function AddCliente() {
         setEmail(""); // Reset dell'email
     };
 
+
+//------------------------------------------------------------------------------------------
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -47,6 +49,11 @@ export function AddCliente() {
         const usernameExists = await checkUsernameExists(username);
         if (usernameExists) {
             notifyErrorAddUsername();
+            return;
+        }
+
+        if(telefono.length <= 9) {
+            notifyErrorAddCliente("Inserisci correttamente il numero di telefono");
             return;
         }
 
