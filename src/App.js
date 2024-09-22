@@ -1,50 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import moment from "moment/moment";
 import "moment/locale/it";
-import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import Box from '@mui/material/Box';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-  useLocation  // Importa useLocation
-} from "react-router-dom";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import AnimateRoutes from "./components/AnimateRoutes";
-import { ToastContainer, toast, Slide } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import BottomNavi from "./components/BottomNavigation";
 import MiniDrawer from "./components/MiniDrawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Paper from "@mui/material/Paper";
-import MuiBottomNavigationAction from "@mui/material/BottomNavigationAction";
-import { BottomNavigation } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import HomeIcon from "@mui/icons-material/Home";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import PersonIcon from "@mui/icons-material/Person";
-import HistoryIcon from "@mui/icons-material/History";
-import { supa, tutti } from "./components/utenti";
+import MuiBottomNavigationAction from "@mui/material/BottomNavigationAction";
+import { tutti } from './components/utenti';
+
+// Styled BottomNavigationAction
+const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
+  color: #f6f6f6;
+`);
 
 function App() {
-  const [value, setValue] = React.useState(0);
-  const matches = useMediaQuery("(max-width:920px)");
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
-  const [selectedPage, setSelectedPage] = useState("home"); // Stato iniziale selezionato
-
+  const matches = useMediaQuery("(max-width:920px)");
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uid = user.uid;
-      localStorage.setItem("uid", uid);
-    } else {
-      // User is signed out
-    }
-  });
 
-  // SignOut
+  useEffect(() => {
+    // Monitoraggio dello stato di autenticazione
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        localStorage.setItem("uid", user.uid);
+      } else {
+        localStorage.removeItem("uid");
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup all'unmount del componente
+  }, [auth]);
+
+  // SignOut function
   const signUserOut = () => {
     signOut(auth).then(() => {
       localStorage.clear();
@@ -52,43 +45,32 @@ function App() {
     });
   };
 
-  const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
-    color: #f6f6f6;
-  `);
-
-  React.useEffect(() => {
-    setValue("");
-    console.log("sono entrato baby");
-    console.log(localStorage.getItem("naviBottom"));
-  }, [value]);
-
   return (
-    <>
-      <Router>
-        <Box sx={{ display: "flex", padding: "0px" }}>
-          {/* Sposta l'uso di useLocation qui */}
-          <AppContent signUserOut={signUserOut} matches={matches} />
-        </Box>
+    <Router>
+      <Box sx={{ display: "flex", padding: 0 }}>
+        {/* AppContent renderizzato con i suoi parametri */}
+        <AppContent signUserOut={signUserOut} matches={matches} />
+      </Box>
 
-      {matches &&
-       <BottomNavi />
-      }
-      </Router>
-    </>
+      {/* Mostra BottomNavi solo su schermi piccoli */}
+      {matches && <BottomNavi />}
+    </Router>
   );
 }
 
-// Crea un nuovo componente che utilizza useLocation
+// Componente per il contenuto principale
 function AppContent({ signUserOut, matches }) {
-  const location = useLocation(); // Ora funziona perché è dentro il Router
+  const location = useLocation(); // Usa useLocation per ottenere l'URL corrente
 
-  // Controlla se l'utente è nella pagina di login
-  const isLoginPage = location.pathname === "/login";  // Modifica "/login" secondo il path della tua pagina di login
+  // Verifica se l'utente si trova nelle pagine di login o block
+  const isLoginPage = location.pathname === "/login";
+  const isBlockPage = location.pathname === "/block";
+  let ta= tutti.includes(localStorage.getItem("uid"))
 
   return (
     <>
-      {/* Mostra la MiniDrawer solo se non è la pagina di login */}
-      {!matches && !isLoginPage && <MiniDrawer signUserOut={signUserOut} />}
+      {/* Mostra MiniDrawer solo se non è la pagina di login o block e lo schermo è grande */}
+      {!matches && !isLoginPage && !isBlockPage && ta && <MiniDrawer signUserOut={signUserOut} />}
 
       <Box
         className="backPage"
@@ -96,20 +78,18 @@ function AppContent({ signUserOut, matches }) {
         sx={{
           flexGrow: 1,
           p: 3,
-          padding: matches ? "0px" : "24px",
+          padding: matches ? 0 : "24px",
           paddingTop: "24px",
         }}
       >
+        {/* Sfondo e contenuto principale */}
         <div className="background-imagePage"></div>
-        <div>
-          <ToastContainer limit={1} />
-        </div>
+        <ToastContainer limit={1} />
 
-         
+        {/* Render delle rotte animate */}
         <div style={{ marginTop: !matches && "50px" }}>
           <AnimateRoutes />
         </div>
-      
       </Box>
     </>
   );

@@ -35,68 +35,14 @@ function Homepage ()  {
     return (
         <>
 {/**************NAVBAR MOBILE*************************************** */}
-    <div className='navMobile row'>
-      <div className='col-2'>
-      </div>
-      <div className='col' style={{padding: 0}}>
-      <p className='navText'> Ricevuta Veloce </p>
-      </div>
-      </div>
+
 
       <motion.div
         initial= {{opacity: 0}}
         animate= {{opacity: 1}}
         transition={{ duration: 0.7 }}>
-      <div className='container' style={{textAlign: "center", marginTop: "160px"}}>
-
-      <div >
-      <Button variant="contained" color='secondary' style={buttonStyle} onClick={() => { setTimeout(function() {navigate("/entrate"+"/"+1);}, 160);}}>Entrate</Button>
-      </div>
-
-      <div >
-      <Button variant="contained" color='secondary' style={buttonStyle}  onClick={() => {setTimeout(function() {navigate("/entrate"+"/"+0);}, 160);}}>Uscite</Button>
-      </div> 
-
-      <div >
-      <Button variant="contained" color='secondary' style={buttonStyle} onClick={() => {setTimeout(function() {navigate("/riepilogo");}, 160);}}>Riepilogo</Button>
-      </div>
-
-
-      <div >
-      <Button variant="contained" color='error'  onClick={() => {setFlagCont(true);}}>Azzera contatore</Button>
-      </div>
-      <div style={{marginTop: "10px"}}>
-      {flagCont == true && 
-      <>
-       <Button className='me-2' variant="contained" color='error'  onClick={() => {setFlagCont(false);}}>No</Button>
-      <Button variant="contained" color='success'  onClick={() => {handleClickOpen(); setFlagCont(false);}}>SI</Button>
-      </>
-      }
-      </div>
-
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Attenzione!!"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Sei sicuro di voler azzerare il conteggio della ricevuta?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>No</Button>
-          <Button onClick={() => {localStorage.setItem("cont", "0"); setFlagCont(false); handleClose()}} autoFocus>
-            Si
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-
+      <div>
+        <h1>Ciao sono entrato</h1>
       </div>
 
       </motion.div>
