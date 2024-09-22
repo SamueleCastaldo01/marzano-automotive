@@ -24,7 +24,7 @@ const theme = createTheme({
     mixins: {
       MuiDataGrid: {
         pinnedBackground: '#18181', // Colore di sfondo per le sezioni appuntate
-        containerBackground: '#5F5F5F', // Colore di sfondo per l'intestazione e le righe fisse
+        containerBackground: '#224072', // Colore di sfondo per l'intestazione e le righe fisse
       },
     },
   });
@@ -113,7 +113,7 @@ export function CustomerList() {
             }}
           >
             {/* Mostra la password censurata o visibile */}
-            <span>{isPasswordVisible ? params.value : "*****"}</span>
+            <span>{isPasswordVisible ? params.value : "*********"}</span>
 
             <div>
               {/* Aggiunge l'icona occhio per alternare la visibilità */}
