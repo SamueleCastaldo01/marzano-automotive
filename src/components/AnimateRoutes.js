@@ -8,6 +8,7 @@ import {PrivateRoutes, PrivatePerm} from '../components/PrivateRoutes';
 import { AnimatePresence } from 'framer-motion';
 import moment from 'moment/moment';
 import 'moment/locale/it'
+import { AddCliente } from '../pages/AddCliente';
 
 
 
@@ -36,6 +37,7 @@ return (
     <Route element={<PrivatePerm/>}>
 
     <Route path="/" element={<Homepage />} /> 
+    <Route path="/addcustomer" element={<AddCliente />} /> 
     
     </Route>
     </Route>

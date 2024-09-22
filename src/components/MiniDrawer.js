@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {collection, deleteDoc, doc, onSnapshot ,addDoc ,updateDoc, query, orderBy, where, serverTimestamp, limit, getDocs, getCountFromServer} from 'firebase/firestore';
+import { doc,  updateDoc} from 'firebase/firestore';
 import { auth, db } from "../firebase-config";
 import { supa } from '../components/utenti';
 import { tutti } from '../components/utenti';
@@ -24,29 +24,17 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HomeIcon from '@mui/icons-material/Home';
 import ListItemText from '@mui/material/ListItemText';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import AdUnitsIcon from '@mui/icons-material/AdUnits';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import { useNavigate } from 'react-router-dom';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
-import {signOut} from "firebase/auth";
 import { useState, useEffect } from 'react';
-import DraftsIcon from '@mui/icons-material/Drafts';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
@@ -239,40 +227,16 @@ export default function MiniDrawer( {signUserOut} ) {
 //***********USE EFFECT*********************************************** */
   useEffect(() => {
     // Ascolta i cambiamenti nell'URL e imposta l'elemento selezionato in base all'URL
-    switch (location.pathname) {
-      case '/scalettadata':
-        setSelectedItem('scaletta');
-        break;
-        case '/scaletta':
-          setSelectedItem('scaletta');
-          break;
-      case '/scorta':
-        setSelectedItem('magazzino');
-        break;
-      case '/scortatinte':
-        setSelectedItem('scortatinte');
-        break;
+    switch (location.pathname) {       
       case '/listaclienti':
           setSelectedItem('listaclienti');
         break;
       case '/dashclienti':
           setSelectedItem('listaclienti');
         break;
-      case '/listafornitori':
-        setSelectedItem('listafornitori');
+        case '/addcustomer':
+          setSelectedItem('addcustomer');
         break;
-      case '/dashfornitore':
-          setSelectedItem('listafornitori');
-        break;
-      case '/preventivodata':
-          setSelectedItem('preventivo');
-        break;
-      case '/addprevnota':
-          setSelectedItem('preventivo');
-      break;
-      case '/preventivo':
-        setSelectedItem('preventivo');
-      break;
       case '/ordineclientidata':
         setSelectedItem('ordineclientidata');
         break;
@@ -281,15 +245,6 @@ export default function MiniDrawer( {signUserOut} ) {
         break;
       case '/nota':
         setSelectedItem('ordineclientidata');
-        break;
-      case '/ordinefornitoridata':
-        setSelectedItem('ordinefornitoridata');
-        break;
-      case '/addnotaforn':
-        setSelectedItem('ordinefornitoridata');
-        break;
-      case '/notadipdata':
-        setSelectedItem('notadipdata');
         break;
       default:
         setSelectedItem('homepage');
@@ -422,8 +377,10 @@ export default function MiniDrawer( {signUserOut} ) {
     }
   }}
       >
-        <DrawerHeader>
-            Nome Azienda
+        <DrawerHeader >
+          <div className='d-flex'> 
+            Marzano
+          </div>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon sx={{ color: "white" }}/>}
           </IconButton>
@@ -476,76 +433,21 @@ export default function MiniDrawer( {signUserOut} ) {
                 </ListItemButton>
             </ListItem>
         </List>
-      </Collapse>
-
-
-      {/* Elemento padre "Prodotti" */}
-      <div >
-      <ListItem  disablePadding sx={{ display: 'block', backgroundColor: openSottocategoriaProd ? 'white' : 'initial' }}>
-      <ListItemButton onMouseEnter={handleMouseEnterProd }  onClick={handleClickSottoCategoriaProd}  >
-        <ListItemIcon>
-          <InventoryIcon sx={{ color: openSottocategoriaProd ?  "black" : "white" }}/>
-        </ListItemIcon>
-        <ListItemText sx={{ color: openSottocategoriaProd ? 'black' : 'white' }} primary="Prodotti" />
-        {openSottocategoriaProd ? <ExpandLess sx={{ color: 'black' }} /> : <ExpandMore />}
-      </ListItemButton>
-      </ListItem>
-      {/* Sottocategoria */}
-      <Collapse in={openSottocategoriaProd} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/scorta")}}>
+          <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/addcustomer")}}>
                 <ListItemButton sx={{ pl: 4 }}
-            selected={selectedItem === "magazzino"}
-            onClick={(event) => handleListItemClick(event, 0)}>
-                  <ListItemIcon sx={{minWidth: 0, mr: open ? 3 : 'auto'}}>
-                    <InventoryIcon sx={{ color: "white" }}/>
-                  </ListItemIcon>
-                  <ListItemText primary="Prodotti" sx={{ opacity: open ? 1 : 0 }} />
+                          selected={selectedItem === "addcustomer"}
+            onClick={(event) => handleListItemClick(event, 3)}>
+                  <PersonAddIcon
+                    sx={{minWidth: 0, mr: open ? 3 : 'auto'}}
+                  >
+                    <ContactPageIcon sx={{ color: "white" }}/>
+                  </PersonAddIcon >
+                  <ListItemText primary="Aggiungi Cliente" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
-          </ListItem>
-        {/** 
-          <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/scortatinte")}}>
-              <ListItemButton sx={{ pl: 4 }}
-          selected={selectedItem === "scortatinte"}
-          onClick={(event) => handleListItemClick(event, 8)}>
-                <ListItemIcon sx={{minWidth: 0, mr: open ? 3 : 'auto'}}>
-                  <InvertColorsIcon sx={{ color: "white" }}/>
-                </ListItemIcon>
-                <ListItemText primary="Tinte" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-          </ListItem>
-          */}
+            </ListItem>
         </List>
       </Collapse>
-      </div>
-
-
-      {/* Elemento padre Fornitori */}
-      <ListItem  disablePadding sx={{ display: 'block', backgroundColor: openSottocategoriaForn ? 'white' : 'initial' }}>
-      <ListItemButton onMouseEnter={handleMouseEnterForn }  onClick={handleClickSottoCategoriaForn}>
-        <ListItemIcon>
-          <InboxIcon sx={{ color: openSottocategoriaForn ?  "black" : "white" }}/>
-        </ListItemIcon>
-        <ListItemText sx={{ color: openSottocategoriaForn ? 'black' : 'white' }} primary="Fornitori" />
-        {openSottocategoriaForn ? <ExpandLess sx={{ color: 'black' }} /> : <ExpandMore />}
-      </ListItemButton>
-      </ListItem>
-      {/* Sottocategoria */}
-      <Collapse in={openSottocategoriaForn} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-        <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/listafornitori")}}>
-              <ListItemButton sx={{ pl: 4 }}
-          selected={selectedItem === "listafornitori"}
-          onClick={(event) => handleListItemClick(event, 3)}>
-                <ListItemIcon sx={{minWidth: 0, mr: open ? 3 : 'auto'}}>
-                  <InvertColorsIcon sx={{ color: "white" }}/>
-                </ListItemIcon>
-                <ListItemText primary="Anagrafica Fornitori" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-          </ListItem>
-        </List>
-      </Collapse>
-
 
 
       {/* Elemento padre "Ordini" */}
