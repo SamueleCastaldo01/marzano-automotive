@@ -1,38 +1,50 @@
-import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import { styled, ThemeProvider } from '@mui/material/styles';
 import { motion } from "framer-motion";
 import { DataGrid } from "@mui/x-data-grid";
 import { itIT } from "@mui/x-data-grid/locales";
-import { Paper, IconButton, Snackbar } from "@mui/material";
+import { Paper, IconButton, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useState, useEffect } from "react";
 import { db } from "../firebase-config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ShareIcon from "@mui/icons-material/Share";
 import { StyledDataGrid, theme } from '../components/StyledDataGrid';
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import Button from '@mui/material/Button';
+import { EditCliente } from '../components/EditCliente';
 
 export function CustomerList() {
   const [customers, setCustomers] = useState([]);
   const [showPassword, setShowPassword] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const [editCustomerId, setEditCustomerId] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
+
+  const handleEdit = (customerId) => {
+    setEditCustomerId(customerId);
+    setEditOpen(true);
+  };
+
+
+  const fetchCustomers = async () => {
+    try {
+      const customerCollection = collection(db, "customersTab");
+      const customerSnapshot = await getDocs(customerCollection);
+      const customerList = customerSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCustomers(customerList);
+    } catch (error) {
+      console.error("Errore nel recupero dei dati dei clienti: ", error);
+    }
+  };
+
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const customerCollection = collection(db, "customersTab");
-        const customerSnapshot = await getDocs(customerCollection);
-        const customerList = customerSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setCustomers(customerList);
-      } catch (error) {
-        console.error("Errore nel recupero dei dati dei clienti: ", error);
-      }
-    };
-
     fetchCustomers();
   }, []);
 
@@ -57,6 +69,30 @@ export function CustomerList() {
     window.open(whatsappUrl, '_blank');
   };
 
+  const handleRowSelectionChange = (newSelection) => {
+    console.log("Selected Customer IDs:", newSelection);
+    setSelectedCustomerIds(newSelection);
+  };
+
+  const handleDelete = async () => {
+    const deletePromises = selectedCustomerIds.map((id) => deleteDoc(doc(db, "customersTab", id)));
+
+    try {
+      await Promise.all(deletePromises);
+      setCustomers(customers.filter(customer => !selectedCustomerIds.includes(customer.id)));
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.error("Errore durante l'eliminazione dei clienti: ", error);
+    } finally {
+      setConfirmOpen(false);
+      setSelectedCustomerIds([]);
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    setConfirmOpen(true);
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "username", headerName: "Username", width: 130 },
@@ -66,7 +102,6 @@ export function CustomerList() {
       width: 200,
       renderCell: (params) => {
         const isPasswordVisible = showPassword[params.row.id];
-
         return (
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
             <span>{isPasswordVisible ? params.value : "*********"}</span>
@@ -104,24 +139,56 @@ export function CustomerList() {
     <ThemeProvider theme={theme}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
         <div className="container-fluid">
-            <div className='d-flex justify-content-between align-items-center'>
-                <h2>Anagrafica Clienti</h2> 
-                <div>
-                    <Button variant="contained" color='primary' className='me-2' >Modifica</Button>
-                    <Button color='error' variant="contained">Elimina</Button>
-                </div>  
+          <div className='d-flex justify-content-between align-items-center'>
+            <h2>Anagrafica Clienti</h2>
+            <div>
+              <Button
+                variant="contained"
+                color='primary'
+                className='me-2'
+                onClick={() => handleEdit(selectedCustomerIds[0])} // Passa l'ID del cliente selezionato
+                disabled={selectedCustomerIds.length !== 1} // Abilita solo se c'è un cliente selezionato
+              >
+                Modifica
+              </Button>
+              <Button color='error' variant="contained" onClick={handleConfirmDelete} disabled={selectedCustomerIds.length === 0}>
+                Elimina {selectedCustomerIds.length > 0 && `(${selectedCustomerIds.length})`}
+              </Button>
             </div>
+          </div>
           
           <Paper className='mt-4' sx={{ height: 500, borderRadius: '8px', overflowX: "auto" }}>
-          <StyledDataGrid
+            <StyledDataGrid
               rows={customers}
               columns={columns}
               checkboxSelection
               disableRowSelectionOnClick
+              onRowSelectionModelChange={handleRowSelectionChange}
               localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
             />
           </Paper>
-          <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)} message="Copiato negli appunti!" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} />
+          <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)} message="Cliente eliminato!" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} />
+
+          <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+            <DialogTitle style={{backgroundColor: "#1E1E1E" }}>Conferma Eliminazione</DialogTitle>
+            <DialogContent style={{backgroundColor: "#1E1E1E" }}>
+              <DialogContentText>
+                Sei sicuro di voler eliminare {selectedCustomerIds.length} cliente{i => (selectedCustomerIds.length > 1 ? 'i' : '')} selezionato{i => (selectedCustomerIds.length > 1 ? 'i' : '')}?
+              </DialogContentText>
+            </DialogContent >
+            <DialogActions style={{backgroundColor: "#1E1E1E" }}>
+              <Button onClick={() => setConfirmOpen(false)} color="primary">Annulla</Button>
+              <Button onClick={handleDelete} color="error">Elimina</Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog maxWidth="md" open={editOpen} onClose={() => setEditOpen(false)}>
+            <DialogTitle style={{backgroundColor: "#1E1E1E" }}>Modifica Cliente</DialogTitle>
+            <DialogContent style={{backgroundColor: "#1E1E1E" }}>
+                <EditCliente fetchCustomers={fetchCustomers} customerId={editCustomerId} onClose={() => setEditOpen(false)} />
+            </DialogContent>
+          </Dialog>
+
         </div>
       </motion.div>
     </ThemeProvider>

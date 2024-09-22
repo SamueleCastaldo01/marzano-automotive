@@ -48,8 +48,23 @@ export function notifyErrorAddUsername () {
 }
 
 //------------------------------------------------------------------------
-export function successAddCliente () {
+export function successAddCliente (text) {
     toast.success("Cliente aggiunto con successo", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        transition: Slide,
+        progress: undefined,
+        theme: "dark",
+        className: "rounded-4"
+        });
+}
+
+export function successUpdateCliente (text) {
+    toast.success("Cliente aggiornato con successo", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
