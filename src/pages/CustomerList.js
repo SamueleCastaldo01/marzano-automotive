@@ -9,48 +9,8 @@ import { collection, getDocs } from "firebase/firestore";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-
-const theme = createTheme({
-    palette: {
-      mode: 'dark', // Imposta il tema su scuro
-      background: {
-        default: '#18181B', // Colore di sfondo principale
-        paper: '#18181', // Colore di sfondo per i componenti Paper
-      },
-      text: {
-        primary: 'white', // Colore del testo primario
-      },
-    },
-    mixins: {
-      MuiDataGrid: {
-        pinnedBackground: '#18181', // Colore di sfondo per le sezioni appuntate
-        containerBackground: '#224072', // Colore di sfondo per l'intestazione e le righe fisse
-      },
-    },
-  });
+import  { StyledDataGrid, theme } from '../components/StyledDataGrid';
   
-  const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-    border: 'none', // Rimuove i bordi
-    '& .MuiDataGrid-row': {
-      backgroundColor: '#18181', // Colore di sfondo per le righe
-      '&:hover': {
-        backgroundColor: '#18181', // Colore di sfondo al passaggio del mouse
-      },
-    },
-    '& .MuiDataGrid-footerContainer': {
-      display: 'flex',
-      alignItems: 'center', // Centra verticalmente gli elementi nel footer
-      justifyContent: 'space-between', // Spazia gli elementi nel footer
-      backgroundColor: '#18181', // Colore di sfondo per il footer
-      padding: '0 10px', // Aggiungi padding se necessario
-    },
-    '& .MuiDataGrid-footer .MuiTypography-root': {
-      margin: 0, // Rimuove il margine dal testo del footer
-    },
-    '& .MuiDataGrid-footer': {
-      borderTop: 'none', // Rimuove il bordo superiore del footer
-    },
-  }));
 
 export function CustomerList() {
   const [customers, setCustomers] = useState([]);

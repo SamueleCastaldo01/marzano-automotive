@@ -17,6 +17,14 @@ body {
   margin-bottom: 0px;
 }
 
+.MuiDataGrid-menuList {
+  background-color: black;
+}
+
+.MuiDataGrid-filterForm {
+  background-color: black;
+}
+
 :root {
   --light: #eee;
   --sabbia: #f8dcb5;
