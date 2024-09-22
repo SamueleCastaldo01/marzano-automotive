@@ -11,6 +11,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ShareIcon from "@mui/icons-material/Share";
 import { StyledDataGrid, theme } from '../components/StyledDataGrid';
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import Button from '@mui/material/Button';
 
 export function CustomerList() {
   const [customers, setCustomers] = useState([]);
@@ -62,7 +63,7 @@ export function CustomerList() {
     {
       field: "password",
       headerName: "Password",
-      width: 300,
+      width: 200,
       renderCell: (params) => {
         const isPasswordVisible = showPassword[params.row.id];
 
@@ -86,7 +87,7 @@ export function CustomerList() {
     {
       field: "telefono",
       headerName: "Telefono",
-      width: 200,
+      width: 150,
       renderCell: (params) => (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
           <span>{params.value}</span>
@@ -103,16 +104,21 @@ export function CustomerList() {
     <ThemeProvider theme={theme}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
         <div className="container-fluid">
-          <h2>Anagrafica Clienti</h2>
-          <Paper sx={{ height: 500, width: "94%", borderRadius: '8px', overflow: 'hidden' }}>
-            <StyledDataGrid
+            <div className='d-flex justify-content-between align-items-center'>
+                <h2>Anagrafica Clienti</h2> 
+                <div>
+                    <Button variant="contained" color='primary' className='me-2' >Modifica</Button>
+                    <Button color='error' variant="contained">Elimina</Button>
+                </div>  
+            </div>
+          
+          <Paper className='mt-4' sx={{ height: 500, borderRadius: '8px', overflowX: "auto" }}>
+          <StyledDataGrid
               rows={customers}
               columns={columns}
-              pageSize={5}
               checkboxSelection
               disableRowSelectionOnClick
               localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
-              sx={{ width: '100%', overflowX: 'hidden' }}
             />
           </Paper>
           <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)} message="Copiato negli appunti!" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} />

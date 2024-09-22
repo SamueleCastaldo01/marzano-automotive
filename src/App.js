@@ -73,24 +73,21 @@ function AppContent({ signUserOut, matches }) {
       {!matches && !isLoginPage && !isBlockPage && ta && <MiniDrawer signUserOut={signUserOut} />}
 
       <Box
-        className="backPage"
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          padding: matches ? 0 : "24px",
-          paddingTop: "24px",
-        }}
-      >
-        {/* Sfondo e contenuto principale */}
-        <div className="background-imagePage"></div>
-        <ToastContainer limit={1} />
-
-        {/* Render delle rotte animate */}
-        <div style={{ marginTop: !matches && "50px" }}>
-          <AnimateRoutes />
-        </div>
-      </Box>
+  component="main"
+  sx={{
+    flexGrow: 1,
+    p: 3,
+    padding: matches ? 0 : "24px",
+    paddingTop: "24px",
+    overflowX: "hidden", // Impedisce lo scroll orizzontale
+  }}
+>
+  <ToastContainer limit={1} />
+  {/* Render delle rotte animate */}
+  <div style={{ marginTop: !matches && "50px" }}>
+    <AnimateRoutes />
+  </div>
+</Box>
     </>
   );
 }

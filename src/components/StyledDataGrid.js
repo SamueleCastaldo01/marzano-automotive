@@ -60,8 +60,6 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     zIndex: 10,
   },
   '& .MuiDataGrid-menu': {
-    zIndex: 1000,
-    backgroundColor: theme.palette.background.paper,
   },
 }));
 
