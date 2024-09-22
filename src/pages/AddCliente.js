@@ -19,6 +19,8 @@ export function AddCliente() {
     const [cittaNascita, setCittaNascita] = useState('');
     const [provinciaNascita, setProvinciaNascita] = useState('');
     const [codiceFiscale, setCodiceFiscale] = useState('');
+    const [telefono, setTelefono] = useState(''); // Stato per il numero di telefono
+    const [email, setEmail] = useState(''); // Stato per l'email
 
     const handleGenderChange = (event) => {
         setGender(event.target.value);
@@ -34,6 +36,8 @@ export function AddCliente() {
         setCittaNascita("");
         setProvinciaNascita("");
         setCodiceFiscale(""); // Reset del codice fiscale
+        setTelefono(""); // Reset del numero di telefono
+        setEmail(""); // Reset dell'email
     };
 
     const handleSubmit = async (event) => {
@@ -61,6 +65,8 @@ export function AddCliente() {
                 cittaNascita,
                 provinciaNascita,
                 codiceFiscale,
+                telefono, // Aggiungi il numero di telefono
+                email, // Aggiungi l'email
             });
             handleReset();
             successAddCliente();
@@ -95,7 +101,7 @@ export function AddCliente() {
             nome: cittaNascita,
             codice: 'F104' // Sostituisci con il codice corretto per il tuo comune
         };
-    
+
         try {
             const cf = generateCodiceFiscale(nome, cognome, dataNascita, sesso, comune);
             setCodiceFiscale(cf);
@@ -111,18 +117,18 @@ export function AddCliente() {
         const numberCharset = "0123456789";
         
         let password = "";
-    
+
         // Aggiungi una lettera maiuscola
         password += upperCharset.charAt(Math.floor(Math.random() * upperCharset.length));
-    
+
         // Aggiungi un numero
         password += numberCharset.charAt(Math.floor(Math.random() * numberCharset.length));
-    
+
         // Completa la password con caratteri casuali fino a raggiungere la lunghezza desiderata
         for (let i = 2; i < length; i++) {
             password += charset.charAt(Math.floor(Math.random() * charset.length));
         }
-    
+
         // Mescola la password
         password = password.split('').sort(() => Math.random() - 0.5).join('');
         
@@ -147,9 +153,8 @@ export function AddCliente() {
                             <TextField className='w-100' required label="Password" variant="outlined" color='tertiary' value={password} onChange={(e) => setPassword(e.target.value)} />
                             <Button onClick={handleGeneratePassword} variant="contained">Genera</Button>    
                         </div>
-                        <div className='d-flex mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' label="Codice Fiscale" variant="outlined" color='tertiary' value={codiceFiscale} onChange={(e) => setCodiceFiscale(e.target.value)} />
-                            <Button onClick={handleCf} variant="contained">Genera</Button>    
+                        <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
+                            <TextField className='w-100' type='number' required label="Numero di Telefono" variant="outlined" color='tertiary' value={telefono} onChange={(e) => setTelefono(e.target.value)} />
                         </div>
                         <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
                             <TextField className='w-100' required label="Nome" variant="outlined" color='tertiary' value={nome} onChange={(e) => setNome(e.target.value)} />
@@ -179,13 +184,17 @@ export function AddCliente() {
                             <TextField className='w-100' label="Città di nascita" variant="outlined" color='tertiary' value={cittaNascita} onChange={(e) => setCittaNascita(e.target.value)} />
                         </div>
                         <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' label="Provincia di Nascita" variant="outlined" color='tertiary' value={provinciaNascita} onChange={(e) => setProvinciaNascita(e.target.value)} />
+                            <TextField className='w-100' label="Provincia di nascita" variant="outlined" color='tertiary' value={provinciaNascita} onChange={(e) => setProvinciaNascita(e.target.value)} />
                         </div>
-                        <div className='d-flex mt-4 gap-2'>
-                            <Button type='submit' variant="contained">Aggiungi</Button>
-                            <Button color='tertiary' variant="outlined" onClick={handleReset}>Resetta</Button>
+                        <div className='d-flex mt-4 col-lg-4 col-md-6 col-sm-12'>
+                            <TextField className='w-100' label="Codice Fiscale" variant="outlined" color='tertiary' value={codiceFiscale} onChange={(e) => setCodiceFiscale(e.target.value)} />
+                            <Button onClick={handleCf} variant="contained">Genera</Button>    
+                        </div>
+                        <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
+                            <TextField className='w-100' label="Email" variant="outlined" color='tertiary' value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                     </div>
+                    <Button className='mt-4' type="submit" variant="contained">Aggiungi Cliente</Button>
                 </form>
             </div>
         </motion.div>

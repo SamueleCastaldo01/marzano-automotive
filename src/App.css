@@ -8,6 +8,15 @@ body {
   overscroll-behavior-y: contain;
 }
 
+
+.MuiTablePagination-selectLabel {
+  margin-bottom: 0px;
+}
+
+.MuiTablePagination-displayedRows {
+  margin-bottom: 0px;
+}
+
 :root {
   --light: #eee;
   --sabbia: #f8dcb5;
