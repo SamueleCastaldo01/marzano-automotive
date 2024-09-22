@@ -228,11 +228,11 @@ export default function MiniDrawer( {signUserOut} ) {
   useEffect(() => {
     // Ascolta i cambiamenti nell'URL e imposta l'elemento selezionato in base all'URL
     switch (location.pathname) {       
-      case '/listaclienti':
-          setSelectedItem('listaclienti');
+      case '/customerlist':
+          setSelectedItem('customerlist');
         break;
       case '/dashclienti':
-          setSelectedItem('listaclienti');
+          setSelectedItem('customerlist');
         break;
         case '/addcustomer':
           setSelectedItem('addcustomer');
@@ -420,9 +420,9 @@ export default function MiniDrawer( {signUserOut} ) {
       {/* Sottocategoria */}
       <Collapse in={openSottocategoria} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/listaclienti")}}>
+          <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/customerlist")}}>
                 <ListItemButton sx={{ pl: 4 }}
-                          selected={selectedItem === "listaclienti"}
+                          selected={selectedItem === "customerlist"}
             onClick={(event) => handleListItemClick(event, 2)}>
                   <ListItemIcon
                     sx={{minWidth: 0, mr: open ? 3 : 'auto'}}

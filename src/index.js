@@ -31,9 +31,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ThemeProvider theme={darkTheme}>
   <CssBaseline />
-  <React.StrictMode>
     <App />
-  </React.StrictMode>
   </ThemeProvider>
 );
 
