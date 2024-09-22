@@ -328,7 +328,7 @@ export default function MiniDrawer( {signUserOut} ) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} color="secondary">
+      <AppBar position="fixed" open={open} color='secondary'>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -418,6 +418,7 @@ export default function MiniDrawer( {signUserOut} ) {
        sx: {
       backgroundColor: "#333",
       color: "white",
+      border: "none"
     }
   }}
       >
