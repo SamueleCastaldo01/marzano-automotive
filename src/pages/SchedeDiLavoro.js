@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, deleteDoc, doc, query, limit } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, query, limit, orderBy } from "firebase/firestore";
 import { db } from "../firebase-config"; // Assicurati che il percorso sia corretto
 import { Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from "@mui/material";
 import { StyledDataGrid, theme } from '../components/StyledDataGrid';
@@ -19,12 +19,20 @@ export function SchedeDiLavoro() {
   const fetchWorkCards = async () => {
     try {
       const workCardCollection = collection(db, "schedaDiLavoroTab");
-      const workCardQuery = query(workCardCollection, limit(100)); // Limita il numero di schede a 100
+      
+      // Aggiungi orderBy per ordinare in base alla data di creazione
+      const workCardQuery = query(
+        workCardCollection,
+        orderBy("dataCreazione", "desc"), // Ordina per data di creazione in ordine decrescente
+        limit(100) // Limita il numero di schede a 100
+      );
+      
       const workCardSnapshot = await getDocs(workCardQuery);
       const workCardList = workCardSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+  
       setWorkCards(workCardList);
     } catch (error) {
       console.error("Errore nel recupero delle schede di lavoro: ", error);
