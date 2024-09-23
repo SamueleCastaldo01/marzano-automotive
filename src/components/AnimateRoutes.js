@@ -4,6 +4,7 @@ import Homepage from '../pages/Homepage'
 import Login from '../pages/Login';
 import { CustomerList } from '../pages/CustomerList';
 import { DashboardCustomer } from '../pages/DashboardCustomer';
+import { SchedeDiLavoro } from '../pages/SchedeDiLavoro';
 import { AddSchede } from '../pages/AddSchede';
 import AggiungiScheda from './AggiungiScheda';
 import Page_per from '../pages/Page_per';
@@ -44,6 +45,7 @@ return (
     <Route path="/customerlist" element={<CustomerList />} /> 
     <Route path="/addcustomer" element={<AddCliente />} /> 
     <Route path="/dashboardcustomer/:id" element={<DashboardCustomer />} /> 
+    <Route path="/schededilavoro" element={<SchedeDiLavoro />} /> 
     <Route path="/aggiungischeda" element={<AddSchede />} /> 
     <Route path="/aggiungischeda1/:id" element={<AggiungiScheda />} /> 
 
