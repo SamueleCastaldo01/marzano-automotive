@@ -9,6 +9,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import TaskIcon from '@mui/icons-material/Task';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -237,11 +238,11 @@ export default function MiniDrawer( {signUserOut} ) {
         case '/addcustomer':
           setSelectedItem('addcustomer');
         break;
-      case '/ordineclientidata':
-        setSelectedItem('ordineclientidata');
+      case '/aggiungischeda':
+        setSelectedItem('aggiungischeda');
         break;
-      case '/addnota':
-        setSelectedItem('ordineclientidata');
+      case '/schededilavoro':
+        setSelectedItem('schededilavoro');
         break;
       case '/nota':
         setSelectedItem('ordineclientidata');
@@ -300,7 +301,7 @@ export default function MiniDrawer( {signUserOut} ) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             
           </Typography>
-          
+
 {/**
         <div>
         {sup &&
@@ -458,48 +459,33 @@ export default function MiniDrawer( {signUserOut} ) {
         <ListItemIcon>
           <ViewListIcon sx={{ color: openSottocategoriaOrd ?  "black" : "white" }} />
         </ListItemIcon>
-        <ListItemText sx={{ color: openSottocategoriaOrd ? 'black' : 'white' }} primary="Ordini" />
+        <ListItemText sx={{ color: openSottocategoriaOrd ? 'black' : 'white' }} primary="Scheda di Lavoro" />
         {openSottocategoriaOrd ? <ExpandLess sx={{ color: 'black' }} /> : <ExpandMore />}
       </ListItemButton>
       </ListItem>
       {/* Sottocategoria */}
       <Collapse in={openSottocategoriaOrd} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-        {/** 
-          <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/preventivodata")}}>
+            <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/schededilavoro")}}>
                 <ListItemButton sx={{ pl: 4 }}
-                    selected={selectedItem === "preventivo"}
-                  onClick={(event) => handleListItemClick(event, 7)}>
-                  <ListItemIcon
-                    sx={{ minWidth: 0,mr: open ? 3 : 'auto'}}>
-                    <NoteAltIcon sx={{ color:  "white" }}/>
+                    selected={selectedItem === "schededilavoro"}
+                  onClick={(event) => handleListItemClick(event, 9)}>
+                  <ListItemIcon sx={{ minWidth: 0,mr: open ? 3 : 'auto'}}>
+                    <TaskIcon sx={{ color: "white" }}/>
                   </ListItemIcon>
-                  <ListItemText primary="Preventivo" sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText primary="Schede" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
             </ListItem>
-          */}
-
-            <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/ordineclientidata")}}>
+            <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/aggiungischeda")}}>
                 <ListItemButton sx={{ pl: 4 }}
-                    selected={selectedItem === "ordineclientidata"}
-                  onClick={(event) => handleListItemClick(event, 4)}>
+                    selected={selectedItem === "aggiungischeda"}
+                  onClick={(event) => handleListItemClick(event, 10)}>
                   <ListItemIcon sx={{ minWidth: 0,mr: open ? 3 : 'auto'}}>
                     <NoteAddIcon sx={{ color: "white" }}/>
                   </ListItemIcon>
-                  <ListItemText primary="Ordine Clienti" sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText primary="Aggiungi scheda" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
             </ListItem>
-          {/***** 
-            <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/ordinefornitoridata")}}>
-                <ListItemButton sx={{ pl: 4 }}
-                  selected={selectedItem === "ordinefornitoridata"}
-                  onClick={(event) => handleListItemClick(event, 5)}>
-                  <ListItemIcon sx={{ minWidth: 0,mr: open ? 3 : 'auto'}}>
-                    <ReceiptLongIcon sx={{ color: "white" }}/>
-                  </ListItemIcon>
-                  <ListItemText primary="Ordine Fornitori" sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-            </ListItem> */}
         </List>
       </Collapse>
       </div>
