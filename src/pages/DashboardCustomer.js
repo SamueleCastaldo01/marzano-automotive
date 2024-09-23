@@ -124,13 +124,13 @@ export function DashboardCustomer() {
 
         {/* Dialog di conferma eliminazione */}
         <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-            <DialogTitle>Conferma Eliminazione</DialogTitle>
-            <DialogContent>
+            <DialogTitle style={{backgroundColor: "#1E1E1E" }}>Conferma Eliminazione</DialogTitle>
+            <DialogContent style={{backgroundColor: "#1E1E1E" }}>
                 <DialogContentText>
                     Sei sicuro di voler eliminare {selectedVehicleIds.length} veicolo{i => (selectedVehicleIds.length > 1 ? 'i' : '')} selezionato{i => (selectedVehicleIds.length > 1 ? 'i' : '')}?
                 </DialogContentText>
             </DialogContent>
-            <DialogActions>
+            <DialogActions style={{backgroundColor: "#1E1E1E" }}>
                 <Button onClick={() => setConfirmOpen(false)} color="primary">Annulla</Button>
                 <Button onClick={handleDelete} color="error">Elimina</Button>
             </DialogActions>

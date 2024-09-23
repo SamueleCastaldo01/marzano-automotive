@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Collapse, Typography } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // Importa l'icona
 import { db } from "../firebase-config";
 import { doc, updateDoc, getDoc, query, collection, where, getDocs } from "firebase/firestore";
 import moment from "moment";
@@ -20,6 +21,7 @@ export function EditCliente({ customerId, onClose, fetchCustomers }) {
   const [codiceFiscale, setCodiceFiscale] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
+  const [showOptionalFields, setShowOptionalFields] = useState(false); // Stato per i campi facoltativi
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -45,11 +47,9 @@ export function EditCliente({ customerId, onClose, fetchCustomers }) {
     fetchCustomer();
   }, [customerId]);
 
-  //------------------------------------------------------------------------------
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Controlla se lo username esiste già
     const usernameExists = await checkUsernameExists(username);
 
     if (telefono.length <= 9) {
@@ -59,7 +59,7 @@ export function EditCliente({ customerId, onClose, fetchCustomers }) {
 
     try {
       await updateDoc(doc(db, "customersTab", customerId), {
-        password, // Ensure you handle password security appropriately
+        password,
         nome,
         cognome,
         gender,
@@ -82,7 +82,7 @@ export function EditCliente({ customerId, onClose, fetchCustomers }) {
     const q = query(collection(db, 'customersTab'), where('username', '==', username));
     const querySnapshot = await getDocs(q);
     return !querySnapshot.empty;
-};
+  };
 
   return (
     <motion.div
@@ -145,67 +145,86 @@ export function EditCliente({ customerId, onClose, fetchCustomers }) {
                 onChange={(e) => setCognome(e.target.value)}
               />
             </div>
-            <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
-              <FormControl fullWidth>
-                <InputLabel id="gender-select-label">Genere</InputLabel>
-                <Select
-                  labelId="gender-select-label"
-                  id="gender-select"
-                  value={gender}
-                  label="Genere"
-                  onChange={(e) => setGender(e.target.value)}
-                >
-                  <MenuItem value="maschio">Maschio</MenuItem>
-                  <MenuItem value="femmina">Femmina</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-            <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
-              <TextField
-                className="w-100"
-                type="date"
-                label="Data di nascita"
-                variant="outlined"
-                value={dataNascita}
-                onChange={(e) => setDataNascita(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-              />
-            </div>
-            <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
-              <TextField
-                className="w-100"
-                label="Città di nascita"
-                variant="outlined"
-                value={cittaNascita}
-                onChange={(e) => setCittaNascita(e.target.value)}
-              />
-            </div>
-            <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
-              <TextField
-                className="w-100"
-                label="Provincia di nascita"
-                variant="outlined"
-                value={provinciaNascita}
-                onChange={(e) => setProvinciaNascita(e.target.value)}
-              />
-            </div>
-            <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
-              <TextField
-                className="w-100"
-                label="Codice Fiscale"
-                variant="outlined"
-                value={codiceFiscale}
-                onChange={(e) => setCodiceFiscale(e.target.value)}
-              />
-            </div>
-            <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
-              <TextField
-                className="w-100"
-                label="Email"
-                variant="outlined"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+
+            {/* Sezione Campi Facoltativi */}
+            <div className="mt-4 col-lg-12">
+              <Typography
+                variant="h6"
+                onClick={() => setShowOptionalFields(!showOptionalFields)}
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+              >
+                Campi Facoltativi
+                {showOptionalFields ?
+                  <ExpandMoreIcon style={{ marginLeft: '8px', transform: 'rotate(180deg)' }} /> :
+                  <ExpandMoreIcon style={{ marginLeft: '8px' }} />
+                }
+              </Typography>
+              <Collapse in={showOptionalFields}>
+                <div className="row">
+                  <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
+                    <FormControl fullWidth>
+                      <InputLabel id="gender-select-label">Genere</InputLabel>
+                      <Select
+                        labelId="gender-select-label"
+                        id="gender-select"
+                        value={gender}
+                        label="Genere"
+                        onChange={(e) => setGender(e.target.value)}
+                      >
+                        <MenuItem value="maschio">Maschio</MenuItem>
+                        <MenuItem value="femmina">Femmina</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
+                    <TextField
+                      className="w-100"
+                      type="date"
+                      label="Data di nascita"
+                      variant="outlined"
+                      value={dataNascita}
+                      onChange={(e) => setDataNascita(e.target.value)}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </div>
+                  <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
+                    <TextField
+                      className="w-100"
+                      label="Città di nascita"
+                      variant="outlined"
+                      value={cittaNascita}
+                      onChange={(e) => setCittaNascita(e.target.value)}
+                    />
+                  </div>
+                  <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
+                    <TextField
+                      className="w-100"
+                      label="Provincia di nascita"
+                      variant="outlined"
+                      value={provinciaNascita}
+                      onChange={(e) => setProvinciaNascita(e.target.value)}
+                    />
+                  </div>
+                  <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
+                    <TextField
+                      className="w-100"
+                      label="Codice Fiscale"
+                      variant="outlined"
+                      value={codiceFiscale}
+                      onChange={(e) => setCodiceFiscale(e.target.value)}
+                    />
+                  </div>
+                  <div className="mt-4 col-lg-4 col-md-6 col-sm-12">
+                    <TextField
+                      className="w-100"
+                      label="Email"
+                      variant="outlined"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </Collapse>
             </div>
           </div>
           <Button className="mt-4" type="submit" variant="contained">
