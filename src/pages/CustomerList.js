@@ -1,6 +1,6 @@
 import { styled, ThemeProvider } from '@mui/material/styles';
 import { motion } from "framer-motion";
-import { DataGrid } from "@mui/x-data-grid";
+import { useNavigate } from 'react-router-dom';
 import { itIT } from "@mui/x-data-grid/locales";
 import { Paper, IconButton, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -19,6 +19,7 @@ export function CustomerList() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const navigate = useNavigate();
 
   const [editCustomerId, setEditCustomerId] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
@@ -95,7 +96,28 @@ export function CustomerList() {
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
-    { field: "username", headerName: "Username", width: 130 },
+    {
+      field: "username",
+      headerName: "Username",
+      width: 130,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <span
+            style={{  cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => {navigate("/dashboardcustomer/" + params.row.id)}}
+          >
+            {params.value}
+          </span>
+        </div>
+      ),
+    },
     {
       field: "password",
       headerName: "Password",
@@ -103,13 +125,32 @@ export function CustomerList() {
       renderCell: (params) => {
         const isPasswordVisible = showPassword[params.row.id];
         return (
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
             <span>{isPasswordVisible ? params.value : "*********"}</span>
             <div>
-              <IconButton onClick={() => handleTogglePassword(params.row.id)} aria-label="toggle password visibility" size="small" sx={{ padding: 0 }}>
+              <IconButton
+                onClick={() => handleTogglePassword(params.row.id)}
+                aria-label="toggle password visibility"
+                size="small"
+                sx={{ padding: 0 }}
+              >
                 {isPasswordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
-              <IconButton onClick={() => handleShare(params.row.telefono, params.row.username, params.row.password)} aria-label="share credentials" size="small" sx={{ padding: 0, marginLeft: 1 }}>
+              <IconButton
+                onClick={() =>
+                  handleShare(params.row.telefono, params.row.username, params.row.password)
+                }
+                aria-label="share credentials"
+                size="small"
+                sx={{ padding: 0, marginLeft: 1 }}
+              >
                 <ShareIcon />
               </IconButton>
             </div>
@@ -124,9 +165,21 @@ export function CustomerList() {
       headerName: "Telefono",
       width: 150,
       renderCell: (params) => (
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
           <span>{params.value}</span>
-          <IconButton onClick={() => handleWhatsApp(params.value)} aria-label="send WhatsApp message" size="small" sx={{ padding: 0 }}>
+          <IconButton
+            onClick={() => handleWhatsApp(params.value)}
+            aria-label="send WhatsApp message"
+            size="small"
+            sx={{ padding: 0 }}
+          >
             <WhatsAppIcon />
           </IconButton>
         </div>
@@ -136,7 +189,7 @@ export function CustomerList() {
   ];
 
   return (
-    <ThemeProvider theme={theme}>
+    
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
         <div className="container-fluid">
           <div className='d-flex justify-content-between align-items-center'>
@@ -156,9 +209,12 @@ export function CustomerList() {
               </Button>
             </div>
           </div>
-          
+          <ThemeProvider theme={theme}>
           <Paper className='mt-4' sx={{ height: 500, borderRadius: '8px', overflowX: "auto" }}>
             <StyledDataGrid
+            onCellClick={() => {
+                
+            }}
               rows={customers}
               columns={columns}
               checkboxSelection
@@ -167,6 +223,7 @@ export function CustomerList() {
               localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
             />
           </Paper>
+          </ThemeProvider>
           <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)} message="Cliente eliminato!" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} />
 
           <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
@@ -191,6 +248,6 @@ export function CustomerList() {
 
         </div>
       </motion.div>
-    </ThemeProvider>
+
   );
 }

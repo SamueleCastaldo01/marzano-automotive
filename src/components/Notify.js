@@ -78,6 +78,36 @@ export function successUpdateCliente (text) {
         });
 }
 
+export function successNoty (text) {
+    toast.success(text, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        transition: Slide,
+        progress: undefined,
+        theme: "dark",
+        className: "rounded-4"
+        });
+}
+
+export function errorNoty(text) {
+    toast.error(text, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Slide,
+        theme: "dark",
+        className: "rounded-4"
+        });
+}
+
 //________________________________________________________________________
 export function notiUploadImage () {
     toast.success("Image uploaded successfully", {

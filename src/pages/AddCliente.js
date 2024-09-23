@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Collapse, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Import dropdown icon
 import { db } from '../firebase-config';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import moment from 'moment';
@@ -19,8 +20,9 @@ export function AddCliente() {
     const [cittaNascita, setCittaNascita] = useState('');
     const [provinciaNascita, setProvinciaNascita] = useState('');
     const [codiceFiscale, setCodiceFiscale] = useState('');
-    const [telefono, setTelefono] = useState(''); // Stato per il numero di telefono
-    const [email, setEmail] = useState(''); // Stato per l'email
+    const [telefono, setTelefono] = useState('');
+    const [email, setEmail] = useState('');
+    const [showOptionalFields, setShowOptionalFields] = useState(false); // State for optional fields
 
     const handleGenderChange = (event) => {
         setGender(event.target.value);
@@ -35,36 +37,30 @@ export function AddCliente() {
         setDataNascita("");
         setCittaNascita("");
         setProvinciaNascita("");
-        setCodiceFiscale(""); // Reset del codice fiscale
-        setTelefono(""); // Reset del numero di telefono
-        setEmail(""); // Reset dell'email
+        setCodiceFiscale("");
+        setTelefono("");
+        setEmail("");
     };
 
-
-//------------------------------------------------------------------------------------------
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // Controlla se lo username esiste già
         const usernameExists = await checkUsernameExists(username);
         if (usernameExists) {
             notifyErrorAddUsername();
             return;
         }
 
-        if(telefono.length <= 9) {
+        if (telefono.length <= 9) {
             notifyErrorAddCliente("Inserisci correttamente il numero di telefono");
             return;
         }
 
-        // Formatta la data di nascita
         const formattedDataNascita = moment(dataNascita).format('DD-MM-YYYY');
 
-        // Aggiungi il cliente al database
         try {
             await addDoc(collection(db, 'customersTab'), {
                 username,
-                password, // Assicurati di gestire la sicurezza della password
+                password,
                 nome,
                 cognome,
                 gender,
@@ -72,8 +68,8 @@ export function AddCliente() {
                 cittaNascita,
                 provinciaNascita,
                 codiceFiscale,
-                telefono, // Aggiungi il numero di telefono
-                email, // Aggiungi l'email
+                telefono,
+                email,
             });
             handleReset();
             successAddCliente();
@@ -92,11 +88,11 @@ export function AddCliente() {
         const cf = CodiceFiscale.fromData({
             nome,
             cognome,
-            data: dataNascita, // Assicurati che sia in formato 'YYYY-MM-DD'
-            sesso, // 'M' per maschio, 'F' per femmina
+            data: dataNascita,
+            sesso,
             comune: {
                 nome: comune.nome,
-                codice: comune.codice // Codice catastale
+                codice: comune.codice
             }
         });
         return cf;
@@ -106,7 +102,7 @@ export function AddCliente() {
         const sesso = gender === "maschio" ? "M" : "F";
         const comune = {
             nome: cittaNascita,
-            codice: 'F104' // Sostituisci con il codice corretto per il tuo comune
+            codice: 'F104'
         };
 
         try {
@@ -118,25 +114,19 @@ export function AddCliente() {
     };
 
     const handleGeneratePassword = () => {
-        const length = 10; // Lunghezza massima
+        const length = 10;
         const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         const upperCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const numberCharset = "0123456789";
-        
+
         let password = "";
-
-        // Aggiungi una lettera maiuscola
         password += upperCharset.charAt(Math.floor(Math.random() * upperCharset.length));
-
-        // Aggiungi un numero
         password += numberCharset.charAt(Math.floor(Math.random() * numberCharset.length));
 
-        // Completa la password con caratteri casuali fino a raggiungere la lunghezza desiderata
         for (let i = 2; i < length; i++) {
             password += charset.charAt(Math.floor(Math.random() * charset.length));
         }
 
-        // Mescola la password
         password = password.split('').sort(() => Math.random() - 0.5).join('');
         
         setPassword(password);
@@ -169,36 +159,55 @@ export function AddCliente() {
                         <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
                             <TextField className='w-100' required label="Cognome" variant="outlined" color='tertiary' value={cognome} onChange={(e) => setCognome(e.target.value)} />
                         </div>
-                        <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <FormControl fullWidth color='tertiary'>
-                                <InputLabel id="gender-select-label">Genere</InputLabel>
-                                <Select
-                                    labelId="gender-select-label"
-                                    id="gender-select"
-                                    value={gender}
-                                    label="Genere"
-                                    onChange={handleGenderChange}
-                                >
-                                    <MenuItem value="maschio">Maschio</MenuItem>
-                                    <MenuItem value="femmina">Femmina</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' type='date' label="Data di nascita" variant="outlined" color='tertiary' value={dataNascita} onChange={(e) => setDataNascita(e.target.value)} InputLabelProps={{ shrink: true }} />
-                        </div>
-                        <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' label="Città di nascita" variant="outlined" color='tertiary' value={cittaNascita} onChange={(e) => setCittaNascita(e.target.value)} />
-                        </div>
-                        <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' label="Provincia di nascita" variant="outlined" color='tertiary' value={provinciaNascita} onChange={(e) => setProvinciaNascita(e.target.value)} />
-                        </div>
-                        <div className='d-flex mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' label="Codice Fiscale" variant="outlined" color='tertiary' value={codiceFiscale} onChange={(e) => setCodiceFiscale(e.target.value)} />
-                            <Button onClick={handleCf} variant="contained">Genera</Button>    
-                        </div>
-                        <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' label="Email" variant="outlined" color='tertiary' value={email} onChange={(e) => setEmail(e.target.value)} />
+
+                        {/* Optional Fields Section */}
+                        <div className='mt-4 col-lg-12'>
+                            <Typography 
+                                variant="h6" 
+                                onClick={() => setShowOptionalFields(!showOptionalFields)} 
+                                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                            >
+                                Campi Facoltativi 
+                                {showOptionalFields ? 
+                                    <ExpandMoreIcon style={{ marginLeft: '8px', transform: 'rotate(180deg)' }} /> : 
+                                    <ExpandMoreIcon style={{ marginLeft: '8px' }} />
+                                }
+                            </Typography>
+                            <Collapse in={showOptionalFields}>
+                                <div className='row'>
+                                    <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
+                                        <FormControl fullWidth color='tertiary'>
+                                            <InputLabel id="gender-select-label">Genere</InputLabel>
+                                            <Select
+                                                labelId="gender-select-label"
+                                                id="gender-select"
+                                                value={gender}
+                                                label="Genere"
+                                                onChange={handleGenderChange}
+                                            >
+                                                <MenuItem value="maschio">Maschio</MenuItem>
+                                                <MenuItem value="femmina">Femmina</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
+                                        <TextField className='w-100' type='date' label="Data di nascita" variant="outlined" color='tertiary' value={dataNascita} onChange={(e) => setDataNascita(e.target.value)} InputLabelProps={{ shrink: true }} />
+                                    </div>
+                                    <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
+                                        <TextField className='w-100' label="Città di nascita" variant="outlined" color='tertiary' value={cittaNascita} onChange={(e) => setCittaNascita(e.target.value)} />
+                                    </div>
+                                    <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
+                                        <TextField className='w-100' label="Provincia di nascita" variant="outlined" color='tertiary' value={provinciaNascita} onChange={(e) => setProvinciaNascita(e.target.value)} />
+                                    </div>
+                                    <div className='d-flex mt-4 col-lg-4 col-md-6 col-sm-12'>
+                                        <TextField className='w-100' label="Codice Fiscale" variant="outlined" color='tertiary' value={codiceFiscale} onChange={(e) => setCodiceFiscale(e.target.value)} />
+                                        <Button onClick={handleCf} variant="contained">Genera</Button>    
+                                    </div>
+                                    <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
+                                        <TextField className='w-100' label="Email" variant="outlined" color='tertiary' value={email} onChange={(e) => setEmail(e.target.value)} />
+                                    </div>
+                                </div>
+                            </Collapse>
                         </div>
                     </div>
                     <Button className='mt-4' type="submit" variant="contained">Aggiungi Cliente</Button>
