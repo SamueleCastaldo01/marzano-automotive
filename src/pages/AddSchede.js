@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { TextField, Button, Typography, CircularProgress } from "@mui/material";
-import { db } from "../firebase-config"; // Assicurati di avere il tuo firebase-config
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebase-config"; // Assicurati di avere il tuo firebase-config
 import { successNoty, errorNoty } from "../components/Notify";
+import TargaInput from "../components/TargaInput"; // Importa il nuovo componente
 
 export function AddSchede() {
   const [targa, setTarga] = useState("");
   const [veicoloTrovato, setVeicoloTrovato] = useState(false);
   const [messaggio, setMessaggio] = useState("");
   const [loading, setLoading] = useState(false); // Stato per il caricamento
+  const [recentTarghe, setRecentTarghe] = useState([]); // Ultime targhe cercate
+
+  useEffect(() => {
+    // Recupera le ultime 10 targhe dal localStorage
+    const storedTarghe = JSON.parse(localStorage.getItem("recentTarghe")) || [];
+    setRecentTarghe(storedTarghe);
+  }, []);
 
   const handleCercaVeicolo = async () => {
     setLoading(true); // Avvia il caricamento
@@ -28,13 +35,31 @@ export function AddSchede() {
       setVeicoloTrovato(true);
       setMessaggio("Veicolo trovato");
       successNoty("Veicolo trovato");
+
+      // Aggiungi la targa valida alle recenti
+      saveRecentTarga(targa.toUpperCase());
     }
   };
 
-  // Effetto per gestire la cancellazione del pulsante se la targa cambia
-  useEffect(() => {
-    setVeicoloTrovato(false);
-  }, [targa]);
+  const saveRecentTarga = (targa) => {
+    const storedTarghe = JSON.parse(localStorage.getItem("recentTarghe")) || [];
+    
+    // Controlla se la targa è già presente
+    if (!storedTarghe.includes(targa)) {
+      // Aggiungi la nuova targa e mantieni solo le ultime 10
+      storedTarghe.unshift(targa);
+      const uniqueTarghe = [...new Set(storedTarghe)];
+      const recentTarghe = uniqueTarghe.slice(0, 10);
+      localStorage.setItem("recentTarghe", JSON.stringify(recentTarghe));
+      setRecentTarghe(recentTarghe);
+    }
+  };
+
+  const handleTargaChange = (newInputValue) => {
+    setTarga(newInputValue);
+    setVeicoloTrovato(false); // Nascondi il pulsante se cambia la targa
+    setMessaggio(""); // Resetta il messaggio
+  };
 
   return (
     <motion.div
@@ -44,43 +69,17 @@ export function AddSchede() {
     >
       <div className="container-fluid">
         <h2>Aggiungi Scheda di Lavoro</h2>
-        <div className="mt-4 d-flex">
-          <TextField
-            label="Targa"
-            variant="outlined"
-            value={targa.toUpperCase()} // Mostra sempre in maiuscolo
-            onChange={(e) => setTarga(e.target.value)}
-            style={{ marginRight: "10px" }}
-          />
-          <Button
-            className="me-2"
-            variant="contained"
-            color="primary"
-            onClick={handleCercaVeicolo}
-            disabled={loading}
-          >
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Cerca"}
-          </Button>
-          {veicoloTrovato && (
-            <Button
-              variant="contained"
-              color="success"
-              style={{ backgroundColor: "#07BC0C" }}
-            >
-              Crea Scheda
-            </Button>
-          )}
-        </div>
-        {veicoloTrovato && (
-          <Typography style={{ marginTop: "10px", color: "#07BC0C" }}>
-            {messaggio}
-          </Typography>
-        )}
-        {!veicoloTrovato && (
-          <Typography color="error" style={{ marginTop: "10px" }}>
-            {messaggio}
-          </Typography>
-        )}
+        {/* Usa il sottocomponente TargaInput */}
+        <TargaInput
+          targa={targa}
+          setTarga={setTarga}
+          handleTargaChange={handleTargaChange}
+          handleCercaVeicolo={handleCercaVeicolo}
+          loading={loading}
+          veicoloTrovato={veicoloTrovato}
+          messaggio={messaggio}
+          recentTarghe={recentTarghe}
+        />
       </div>
     </motion.div>
   );

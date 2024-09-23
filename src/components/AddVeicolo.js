@@ -23,7 +23,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
         setAnnoImmatricolazione("");
         setTipoAlimentazione("");
         setPotenza("");
-    }
+    };
 
     const isTargaUnique = async (targa) => {
         const q = query(collection(db, "veicoloTab"), where("targa", "==", targa));
@@ -37,7 +37,8 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
             return;
         }
 
-        const isUnique = await isTargaUnique(targa);
+        const upperCaseTarga = targa.toUpperCase(); // Converti la targa in maiuscolo
+        const isUnique = await isTargaUnique(upperCaseTarga);
         if (!isUnique) {
             errorNoty("La targa deve essere univoca");
             return;
@@ -46,7 +47,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
         try {
             await addDoc(collection(db, "veicoloTab"), {
                 idCustomer,
-                targa,
+                targa: upperCaseTarga, // Salva la targa in maiuscolo
                 marca,
                 nomeModello,
                 numeroTelaio: numeroTelaio || null,
@@ -65,8 +66,8 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md">
-            <DialogTitle style={{backgroundColor: "#1E1E1E" }}>Aggiungi Veicolo</DialogTitle>
-            <DialogContent style={{backgroundColor: "#1E1E1E" }}>
+            <DialogTitle style={{ backgroundColor: "#1E1E1E" }}>Aggiungi Veicolo</DialogTitle>
+            <DialogContent style={{ backgroundColor: "#1E1E1E" }}>
                 <div className="container-fluid">
                     <form>
                         <div className="row">
@@ -77,8 +78,8 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
                                     required
                                     label="Targa"
                                     variant="outlined"
-                                    value={targa}
-                                    onChange={(e) => setTarga(e.target.value)}
+                                    value={targa.toUpperCase()} // Mostra sempre in maiuscolo
+                                    onChange={(e) => setTarga(e.target.value.toUpperCase())} // Converti in maiuscolo
                                 />
                             </div>
                             <div className="col-lg-6 col-md-6 col-sm-12 mt-4">
@@ -173,7 +174,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
                     </form>
                 </div>
             </DialogContent>
-            <DialogActions style={{backgroundColor: "#1E1E1E" }}>
+            <DialogActions style={{ backgroundColor: "#1E1E1E" }}>
                 <Button onClick={onClose} color="secondary">
                     Annulla
                 </Button>
