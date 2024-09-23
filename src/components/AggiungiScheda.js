@@ -21,7 +21,7 @@ const AggiungiScheda = ({  }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [pagato, setPagato] = useState("");
   const [resta, setResta] = useState(0);
-  const [sconto, setSconto] = useState(0);
+  const [sconto, setSconto] = useState("");
 
   const fetchData = async () => {
     if (!id) return;
@@ -79,6 +79,26 @@ const AggiungiScheda = ({  }) => {
     const totaleComplessivo = calculateTotal(manodopera, dataScheda);
     const resto = (totaleComplessivo - (newPagato ? Number(newPagato) : 0)).toFixed(2); // Usa Number solo se newPagato non è vuoto
     await updateRestoInDatabase(resto);
+  };
+
+  const handleScontoChange = async (value) => {
+    const newSconto = value === "" ? "" : value; // Mantieni come stringa
+  
+    // Calcola il nuovo valore di resto
+    const currentSconto = newSconto === "" ? 0 : Number(newSconto); // Converti in numero solo per il calcolo
+    const totaleComplessivo = calculateTotal(manodopera, dataScheda) - pagato;
+    const newResto = (totaleComplessivo - currentSconto).toFixed(2); // Sottrai il valore dello sconto
+
+  
+    // Aggiorna lo stato
+    setSconto(newSconto);
+    setResta(newResto);
+  
+    // Aggiorna anche il database
+    await updateDoc(doc(db, "schedaDiLavoroTab", id), {
+      sconto: newSconto,
+      resto: newResto,
+    });
   };
 
   const updatePagatoInDatabase = async (newPagato) => {
@@ -485,9 +505,10 @@ const AggiungiScheda = ({  }) => {
             variant="outlined"
             color="tertiary"
             value={sconto}
+            onChange={(e) => handleScontoChange(e.target.value)}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">Sconto: %</InputAdornment>
+                <InputAdornment position="start">Sconto: €</InputAdornment>
               ),
             }}
             type="number"
@@ -497,7 +518,7 @@ const AggiungiScheda = ({  }) => {
             variant="outlined"
             color="tertiary"
             disabled
-            value={(calculateTotal(manodopera, dataScheda) - pagato).toFixed(2)}
+            value={((calculateTotal(manodopera, dataScheda) - pagato) - sconto).toFixed(2)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">Resta: €</InputAdornment>
