@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { collection, addDoc, Timestamp, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { successNoty, errorNoty } from "../components/Notify";
 import TargaInput from "../components/TargaInput";
 import AggiungiScheda from "../components/AggiungiScheda";
 
 export function AddSchede() {
+  const navigate = useNavigate();
   const [targa, setTarga] = useState("");
   const [veicoloTrovato, setVeicoloTrovato] = useState(false);
   const [messaggio, setMessaggio] = useState("");
@@ -17,13 +19,15 @@ export function AddSchede() {
   const [cliente, setCliente] = useState("");
   const [telefono, setTelefono] = useState("");
   const [veicolo, setVeicolo] = useState("");
+  const [idScheda, setIdScheda] = useState("");
+  const [dataScheda, setDataScheda] = useState([]);
 
   useEffect(() => {
     const storedTarghe = JSON.parse(localStorage.getItem("recentTarghe")) || [];
     setRecentTarghe(storedTarghe);
   }, []);
 
-  //--------------------------------------------------------------------------------------
+  // Funzione per cercare il veicolo
   const handleCercaVeicolo = async () => {
     try {
       setLoading(true);
@@ -39,12 +43,10 @@ export function AddSchede() {
         setMessaggio("Veicolo non trovato");
         errorNoty("Veicolo non trovato");
       } else {
-        // Recupera i dati del veicolo
         const veicoloData = querySnapshot.docs[0].data();
         const { idCustomer, marca, nomeModello } = veicoloData;
         setVeicolo(`${marca} ${nomeModello}`);
   
-        // Ora recupera i dati del cliente usando idCustomer come ID del documento
         const customerDocRef = doc(db, "customersTab", idCustomer);
         const customerDoc = await getDoc(customerDocRef);
   
@@ -59,7 +61,6 @@ export function AddSchede() {
   
         setVeicoloTrovato(true);
         setMessaggio("Veicolo trovato");
-        successNoty("Veicolo trovato");
         saveRecentTarga(targa.toUpperCase());
       }
     } catch (error) {
@@ -67,8 +68,7 @@ export function AddSchede() {
       errorNoty("Errore durante la ricerca.");
     }
   };
-  
-
+//----------------------------------------------------------------------------
   const saveRecentTarga = (targa) => {
     const storedTarghe = JSON.parse(localStorage.getItem("recentTarghe")) || [];
     if (!storedTarghe.includes(targa)) {
@@ -79,15 +79,55 @@ export function AddSchede() {
       setRecentTarghe(recentTarghe);
     }
   };
-
+//----------------------------------------------------------------------------
   const handleTargaChange = (newInputValue) => {
     setTarga(newInputValue);
     setVeicoloTrovato(false);
     setMessaggio("");
   };
-
-  const handleCreaSchedaClick = () => {
-    setShowAggiungiScheda(true);
+//----------------------------------------------------------------------------
+  const handleCreaSchedaClick = async () => {
+    try {
+      const dataScheda = [{
+        descrizione: "",
+        qt: "",
+        prezzo: "",
+        sconto: "",
+        totale: "",
+      }];
+  
+      // Aggiungi l'array di manodopera con un oggetto vuoto
+      const manodopera = [{
+        qt: "",
+        prezzo: "",
+        sconto: "",
+        totale: "",
+      }];
+  
+      const nuovaScheda = {
+        targa,
+        cliente,
+        telefono,
+        veicolo,
+        dataCreazione: Timestamp.now(),
+        dataScheda,
+        manodopera, 
+        totale: "0",
+        pagato: "0",
+        sconto: "0",
+        resta: "0"
+      };
+  
+      const docRef = await addDoc(collection(db, "schedaDiLavoroTab"), nuovaScheda);
+      successNoty("Scheda creata con successo!");
+  
+      // Resetta i campi
+      setIdScheda(docRef.id);
+      navigate("/aggiungischeda1/" + docRef.id)
+    } catch (error) {
+      errorNoty("Errore durante la creazione della scheda.");
+      console.error("Errore: ", error);
+    }
   };
 
   return (
@@ -104,10 +144,15 @@ export function AddSchede() {
             veicoloTrovato={veicoloTrovato}
             messaggio={messaggio}
             recentTarghe={recentTarghe}
-            onCreaScheda={handleCreaSchedaClick}
+            onCreaScheda={() => {
+              setShowAggiungiScheda(true);
+              handleCreaSchedaClick(); // Crea scheda
+            }}
           />
         ) : (
-          <AggiungiScheda targa={targa} cliente={cliente} telefono={telefono} veicolo={veicolo} />
+          <div>
+            <AggiungiScheda idScheda={idScheda} targa={targa} cliente={cliente} telefono={telefono} veicolo={veicolo} />
+          </div>
         )}
       </div>
     </motion.div>
