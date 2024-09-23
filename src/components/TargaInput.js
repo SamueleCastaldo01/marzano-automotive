@@ -5,17 +5,17 @@ import {
   CircularProgress,
   Autocomplete,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const TargaInput = ({
   targa,
-  setTarga,
   handleTargaChange,
   handleCercaVeicolo,
   loading,
   veicoloTrovato,
   messaggio,
   recentTarghe,
+  onCreaScheda,
 }) => {
   return (
     <>
@@ -51,6 +51,7 @@ const TargaInput = ({
             variant="contained"
             color="success"
             style={{ backgroundColor: "#07BC0C" }}
+            onClick={onCreaScheda} // Aggiungi onClick per chiamare onCreaScheda
           >
             Crea Scheda
           </Button>
