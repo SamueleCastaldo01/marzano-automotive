@@ -142,36 +142,43 @@ export function SchedeDiLavoro() {
         <div className="container-fluid">
           <div className="d-flex justify-content-between align-items-center">
             <h2>Schede di Lavoro</h2>
-            <Button
-              color="error"
-              variant="contained"
-              onClick={handleConfirmDelete}
-              disabled={selectedWorkCardIds.length === 0}
-            >
-              Elimina{" "}
-              {selectedWorkCardIds.length > 0 &&
-                `(${selectedWorkCardIds.length})`}
-            </Button>
+            <div>
+              <Button
+                className="me-2"
+                color="primary"
+                variant="contained"
+                onClick={() => {navigate("/aggiungischeda")}}
+              >
+                Aggiungi
+              </Button>
+              <Button
+                color="error"
+                variant="contained"
+                onClick={handleConfirmDelete}
+                disabled={selectedWorkCardIds.length === 0}
+              >
+                Elimina{" "}
+                {selectedWorkCardIds.length > 0 &&
+                  `(${selectedWorkCardIds.length})`}
+              </Button>
+            </div>
           </div>
 
-            <ThemeProvider theme={theme}>
-              <Paper
-                className="mt-4"
-                sx={{ height: 400, borderRadius: "8px", overflowX: "auto" }}
-              >
-                <StyledDataGrid
-                  rows={workCards}
-                  columns={columns}
-                  checkboxSelection
-                  disableRowSelectionOnClick
-                  onRowSelectionModelChange={handleRowSelectionChange}
-                  localeText={
-                    itIT.components.MuiDataGrid.defaultProps.localeText
-                  }
-                />
-              </Paper>
-            </ThemeProvider>
-         
+          <ThemeProvider theme={theme}>
+            <Paper
+              className="mt-4"
+              sx={{ height: 400, borderRadius: "8px", overflowX: "auto" }}
+            >
+              <StyledDataGrid
+                rows={workCards}
+                columns={columns}
+                checkboxSelection
+                disableRowSelectionOnClick
+                onRowSelectionModelChange={handleRowSelectionChange}
+                localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
+              />
+            </Paper>
+          </ThemeProvider>
         </div>
       </motion.div>
 
