@@ -64,6 +64,7 @@ export function SchedeDiLavoro() {
     setSelectedWorkCardIds(newSelection);
   };
 
+  //delete---------------------------------------------------
   const handleDelete = async () => {
     const deletePromises = selectedWorkCardIds.map((id) =>
       deleteDoc(doc(db, "schedaDiLavoroTab", id))
