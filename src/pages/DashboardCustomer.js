@@ -299,7 +299,18 @@ export function DashboardCustomer() {
             </ThemeProvider>
 
             <div className="mt-5">
-              <h5 className="mb-0">Schede di Lavoro</h5>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="mb-0">Schede di Lavoro</h5>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {navigate("/aggiungischeda")}}
+                >
+                  Aggiungi una Scheda
+                </Button>
+
+              </div>
+              
               <ThemeProvider theme={theme}>
                 <Paper
                   className="mt-4"

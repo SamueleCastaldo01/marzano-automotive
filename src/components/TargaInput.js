@@ -107,7 +107,7 @@ const TargaInput = ({
           onClick={handleCercaVeicolo}
           disabled={loading}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Cerca"}
+          {loading ? <CircularProgress size={24} color="inherit" /> : "Cerca Targa"}
         </Button>
         {veicoloTrovato && (
           <Button
