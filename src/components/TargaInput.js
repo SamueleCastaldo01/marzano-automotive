@@ -13,6 +13,7 @@ import AddVeicolo from "./AddVeicolo";
 
 const TargaInput = ({
   targa,
+  setTarga,
   handleTargaChange,
   handleCercaVeicolo,
   loading,
@@ -37,6 +38,10 @@ const TargaInput = ({
   const vuota = () => {
 
   }
+
+  const handleTargaSaved = (newTarga) => {
+    setTarga(newTarga); // Imposta la nuova targa quando un veicolo è aggiunto
+  };
 
   // Funzione per caricare i clienti dal database
   const fetchClienti = async () => {
@@ -210,7 +215,8 @@ const TargaInput = ({
         <AddVeicolo
         username={username}
           open={openAddDialog}
-          onClose={() => setOpenAddDialog(false)}
+          onClose={() => {setOpenAddDialog(false); setBooVeic(false); setShowButtonVeic(false);}}
+          onTargaSaved={handleTargaSaved}
           idCustomer={idCustomer}
           fetchVehicles={vuota}
         />

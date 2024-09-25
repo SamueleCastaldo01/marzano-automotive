@@ -55,6 +55,10 @@ export function DashboardCustomer() {
     setEditOpen(true);
   };
 
+  const vuoto = () => {
+
+  }
+
   // Funzione per gestire la selezione delle righe
   const handleRowSelectionChange = (newSelection) => {
     setSelectedVehicleIds(newSelection);
@@ -335,6 +339,7 @@ export function DashboardCustomer() {
       <AddVeicolo
         username={username}
         open={openAddDialog}
+        onTargaSaved={vuoto}
         onClose={() => setOpenAddDialog(false)}
         idCustomer={id}
         fetchVehicles={fetchVehicles}

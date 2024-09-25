@@ -5,7 +5,7 @@ import { db } from "../firebase-config";
 import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { successNoty, errorNoty } from "../components/Notify";
 
-const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username }) => {
+const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTargaSaved }) => {
     const [targa, setTarga] = useState("");
     const [marca, setMarca] = useState("");
     const [nomeModello, setNomeModello] = useState("");
@@ -57,6 +57,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username }) => {
             });
             successNoty("Veicolo aggiunto con successo");
             fetchVehicles();
+            onTargaSaved(upperCaseTarga);
             onClose(); // Chiudi il dialogo dopo l'aggiunta
             resetCampi();
         } catch (error) {
