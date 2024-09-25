@@ -5,7 +5,7 @@ import { itIT } from "@mui/x-data-grid/locales";
 import { Paper, IconButton, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useState, useEffect } from "react";
 import { db } from "../firebase-config";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, orderBy, query } from "firebase/firestore";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ShareIcon from "@mui/icons-material/Share";
@@ -32,17 +32,22 @@ export function CustomerList() {
 
   const fetchCustomers = async () => {
     try {
-      const customerCollection = collection(db, "customersTab");
-      const customerSnapshot = await getDocs(customerCollection);
-      const customerList = customerSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setCustomers(customerList);
+        const customerCollection = collection(db, "customersTab");
+        
+        // Crea una query per ordinare per dataCreazione in ordine decrescente
+        const customerQuery = query(customerCollection, orderBy("dataCreazione", "desc"));
+
+        const customerSnapshot = await getDocs(customerQuery);
+        const customerList = customerSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        
+        setCustomers(customerList);
     } catch (error) {
-      console.error("Errore nel recupero dei dati dei clienti: ", error);
+        console.error("Errore nel recupero dei dati dei clienti: ", error);
     }
-  };
+};
 
 
   useEffect(() => {

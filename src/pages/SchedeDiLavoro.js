@@ -214,7 +214,7 @@ export function SchedeDiLavoro() {
                   navigate("/aggiungischeda");
                 }}
               >
-                Aggiungi
+                Aggiungi Schede
               </Button>
               <Button
                 color="error"

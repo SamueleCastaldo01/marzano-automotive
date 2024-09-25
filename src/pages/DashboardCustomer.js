@@ -241,7 +241,7 @@ export function DashboardCustomer() {
                   variant="contained"
                   onClick={() => setOpenAddDialog(true)}
                 >
-                  Aggiungi
+                  Aggiungi Veicolo
                 </Button>
                 <Button
                   className="me-2"

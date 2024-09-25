@@ -1,16 +1,18 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { FormControl, InputLabel, MenuItem, Select, Collapse, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Import dropdown icon
 import { db } from '../firebase-config';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, Timestamp  } from 'firebase/firestore';
 import moment from 'moment';
 import CodiceFiscale from 'codice-fiscale-js';
 import { notifyErrorAddCliente, notifyErrorAddUsername, successAddCliente } from '../components/Notify';
 
 export function AddCliente() {
+    const navigate = useNavigate();
     const [gender, setGender] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -49,14 +51,14 @@ export function AddCliente() {
             notifyErrorAddUsername();
             return;
         }
-
+    
         if (telefono.length <= 9) {
             notifyErrorAddCliente("Inserisci correttamente il numero di telefono");
             return;
         }
-
+    
         const formattedDataNascita = moment(dataNascita).format('DD-MM-YYYY');
-
+    
         try {
             await addDoc(collection(db, 'customersTab'), {
                 username,
@@ -70,8 +72,10 @@ export function AddCliente() {
                 codiceFiscale,
                 telefono,
                 email,
+                dataCreazione: Timestamp.fromDate(new Date()), // Aggiungi la data di creazione
             });
             handleReset();
+            navigate("/customerlist");
             successAddCliente();
         } catch (error) {
             console.error('Errore nell\'aggiunta del cliente: ', error);

@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { FormControl, InputLabel, MenuItem, Select, Collapse, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // Importa l'icona
 import { db } from "../firebase-config";
-import { doc, updateDoc, getDoc, query, collection, where, getDocs } from "firebase/firestore";
+import { doc, updateDoc, getDoc, query, collection, where, getDocs, Timestamp } from "firebase/firestore";
 import moment from "moment";
 import { notifyErrorAddCliente, successUpdateCliente, notifyErrorAddUsername } from "./Notify";
 
@@ -69,6 +69,7 @@ export function EditCliente({ customerId, onClose, fetchCustomers }) {
         codiceFiscale,
         telefono,
         email,
+        dataCreazione: Timestamp.fromDate(new Date()),
       });
       successUpdateCliente();
       fetchCustomers();
