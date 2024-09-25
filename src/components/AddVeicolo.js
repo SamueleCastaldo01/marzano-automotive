@@ -5,7 +5,7 @@ import { db } from "../firebase-config";
 import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { successNoty, errorNoty } from "../components/Notify";
 
-const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
+const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username }) => {
     const [targa, setTarga] = useState("");
     const [marca, setMarca] = useState("");
     const [nomeModello, setNomeModello] = useState("");
@@ -66,7 +66,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md">
-            <DialogTitle style={{ backgroundColor: "#1E1E1E" }}>Aggiungi Veicolo</DialogTitle>
+            <DialogTitle style={{ backgroundColor: "#1E1E1E" }}>Aggiungi Veicolo di {username}</DialogTitle>
             <DialogContent style={{ backgroundColor: "#1E1E1E" }}>
                 <div className="container-fluid">
                     <form>

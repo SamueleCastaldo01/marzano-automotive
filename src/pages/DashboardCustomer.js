@@ -47,6 +47,7 @@ export function DashboardCustomer() {
   const [editOpen, setEditOpen] = useState(false);
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
+  const [username, setUsername] = useState("");
 
   // Funzione per gestire l'editing del veicolo
   const handleEdit = (vehicleId) => {
@@ -131,6 +132,7 @@ export function DashboardCustomer() {
       const customerDoc = await getDoc(doc(db, "customersTab", id)); // Prendi il documento del cliente
       if (customerDoc.exists()) {
         const customerData = customerDoc.data();
+        setUsername(customerData.username);
         setNome(customerData.nome);
         setCognome(customerData.cognome);
       } else {
@@ -331,6 +333,7 @@ export function DashboardCustomer() {
 
       {/* Dialog per aggiungere il veicolo */}
       <AddVeicolo
+        username={username}
         open={openAddDialog}
         onClose={() => setOpenAddDialog(false)}
         idCustomer={id}
