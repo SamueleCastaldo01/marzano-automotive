@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   Button,
   Paper,
@@ -32,6 +33,8 @@ import { itIT } from "@mui/x-data-grid/locales";
 
 export function DashboardCustomer() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
   const [workCards, setWorkCards] = useState([]);
   const { id } = useParams(); // Questo è l'ID del cliente
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -65,15 +68,16 @@ export function DashboardCustomer() {
     setSelectedWorkCardIds(newSelection);
   };
 
-  const fetchWorkCards = async (idCustomer) => {
+  const fetchWorkCards = async () => {
+    setLoading(true); // Imposta loading a true all'inizio
     try {
       const workCardCollection = collection(db, "schedaDiLavoroTab");
 
-      // Aggiungi il filtro where per filtrare in base all'idCustomer
+      // Query come prima
       const workCardQuery = query(
         workCardCollection,
-        where("idCustomer", "==", id), // Filtro per idCustomer
-        limit(100) // Limita il numero di schede a 100
+        where("idCustomer", "==", id),
+        limit(100)
       );
 
       const workCardSnapshot = await getDocs(workCardQuery);
@@ -82,46 +86,60 @@ export function DashboardCustomer() {
         ...doc.data(),
       }));
 
-      setWorkCards(workCardList); // Imposta lo stato con le schede recuperate
+      // Ordinamento come prima
+      workCardList.sort((a, b) => {
+        if (a.createdAt && b.createdAt) {
+          return b.createdAt.seconds - a.createdAt.seconds;
+        }
+        return 0;
+      });
+
+      setWorkCards(workCardList); // Imposta lo stato con le schede ordinate
     } catch (error) {
       console.error("Errore nel recupero delle schede di lavoro: ", error);
+    } finally {
+      setLoading(false); // Imposta loading a false alla fine
     }
   };
 
   // Funzione per recuperare i veicoli del cliente
   const fetchVehicles = async () => {
+    setLoading2(true); // Imposta loading2 a true all'inizio
     try {
       const vehicleCollection = collection(db, "veicoloTab");
       const vehicleQuery = query(
         vehicleCollection,
-        where("idCustomer", "==", id)
-      ); // Filtro diretto
+        where("idCustomer", "==", id) // Filtro diretto
+      );
+
       const vehicleSnapshot = await getDocs(vehicleQuery);
       const vehicleList = vehicleSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+
       setVehicles(vehicleList);
     } catch (error) {
       console.error("Errore nel recupero dei veicoli: ", error);
+    } finally {
+      setLoading2(false); // Imposta loading2 a false alla fine
     }
   };
 
   const fetchCustomerUsername = async () => {
     try {
-        const customerDoc = await getDoc(doc(db, "customersTab", id)); // Prendi il documento del cliente
-        if (customerDoc.exists()) {
-            const customerData = customerDoc.data();
-            setNome(customerData.nome);
-            setCognome(customerData.cognome);
-
-        } else {
-            console.log("Nessun documento trovato per il cliente con ID:", id);
-        }
+      const customerDoc = await getDoc(doc(db, "customersTab", id)); // Prendi il documento del cliente
+      if (customerDoc.exists()) {
+        const customerData = customerDoc.data();
+        setNome(customerData.nome);
+        setCognome(customerData.cognome);
+      } else {
+        console.log("Nessun documento trovato per il cliente con ID:", id);
+      }
     } catch (error) {
-        console.error("Errore nel recupero dello username:", error);
+      console.error("Errore nel recupero dello username:", error);
     }
-};
+  };
 
   // Effetto per recuperare i veicoli e lo username quando il componente viene montato
   useEffect(() => {
@@ -158,7 +176,6 @@ export function DashboardCustomer() {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-  
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -251,6 +268,18 @@ export function DashboardCustomer() {
                 className="mt-4"
                 sx={{ height: 300, borderRadius: "8px", overflowX: "auto" }}
               >
+                {loading2 ? ( 
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                      }}
+                    >
+                      <CircularProgress />
+                    </div>
+                  ) :(
                 <StyledDataGrid
                   rows={vehicles}
                   columns={columns}
@@ -259,35 +288,46 @@ export function DashboardCustomer() {
                   localeText={
                     itIT.components.MuiDataGrid.defaultProps.localeText
                   }
-                />
+                /> )}
               </Paper>
             </ThemeProvider>
 
-
             <div className="mt-5">
-                <h5 className="mb-0">Schede di Lavoro</h5>
+              <h5 className="mb-0">Schede di Lavoro</h5>
               <ThemeProvider theme={theme}>
                 <Paper
                   className="mt-4"
                   sx={{ height: 350, borderRadius: "8px", overflowX: "auto" }}
                 >
-                  <StyledDataGrid
-                    rows={workCards}
-                    columns={columSchede}
-                    checkboxSelection
-                    disableRowSelectionOnClick
-                    onRowSelectionModelChange={handleRowSelectionChange2}
-                    localeText={
-                      itIT.components.MuiDataGrid.defaultProps.localeText
-                    }
-                  />
+                  {loading ? ( 
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                      }}
+                    >
+                      <CircularProgress />
+                    </div>
+                  ) : (
+                    <StyledDataGrid
+                      rows={workCards}
+                      columns={columSchede}
+                      checkboxSelection
+                      disableRowSelectionOnClick
+                      onRowSelectionModelChange={handleRowSelectionChange2}
+                      localeText={
+                        itIT.components.MuiDataGrid.defaultProps.localeText
+                      }
+                    />
+                  )}
                 </Paper>
               </ThemeProvider>
             </div>
           </div>
         </div>
       </motion.div>
-
 
       {/* Dialog per aggiungere il veicolo */}
       <AddVeicolo
@@ -296,9 +336,6 @@ export function DashboardCustomer() {
         idCustomer={id}
         fetchVehicles={fetchVehicles}
       />
-
-
-
 
       {/* Dialog di conferma eliminazione */}
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>

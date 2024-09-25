@@ -25,6 +25,10 @@ body {
   background-color: black;
 }
 
+.MuiMenu-list {
+  background-color: black;
+}
+
 :root {
   --light: #eee;
   --sabbia: #f8dcb5;

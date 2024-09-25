@@ -10,6 +10,7 @@ import {
   query,
   limit,
   orderBy,
+  where, // Importa 'where' per filtrare i documenti
 } from "firebase/firestore";
 import { db } from "../firebase-config"; // Assicurati che il percorso sia corretto
 import {
@@ -21,6 +22,7 @@ import {
   DialogContentText,
   DialogTitle,
   Snackbar,
+  TextField, // Importa TextField per l'input
 } from "@mui/material";
 import { StyledDataGrid, theme } from "../components/StyledDataGrid";
 import { ThemeProvider } from "@mui/material/styles";
@@ -32,24 +34,38 @@ export function SchedeDiLavoro() {
   const [selectedWorkCardIds, setSelectedWorkCardIds] = useState([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // Stato per l'input di ricerca
 
-  const fetchWorkCards = async () => {
+  const fetchWorkCards = async (search = "") => {
     try {
       const workCardCollection = collection(db, "schedaDiLavoroTab");
-
-      // Aggiungi orderBy per ordinare in base alla data di creazione
-      const workCardQuery = query(
-        workCardCollection,
-        orderBy("dataCreazione", "desc"), // Ordina per data di creazione in ordine decrescente
-        limit(100) // Limita il numero di schede a 100
-      );
-
+  
+      let workCardQuery;
+      if (search) {
+        // Se c'è un termine di ricerca, usa where per filtrare i risultati
+        workCardQuery = query(
+          workCardCollection,
+          where("targa", "==", search)
+        );
+      } else {
+        // Altrimenti, recupera le schede senza filtro
+        workCardQuery = query(workCardCollection);
+      }
+  
       const workCardSnapshot = await getDocs(workCardQuery);
       const workCardList = workCardSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-
+  
+      // Ordina manualmente l'array per data di creazione dal più recente
+      workCardList.sort((a, b) => {
+        const dateA = a.dataCreazione ? a.dataCreazione.toDate() : null; // Assicurati di avere una data valida
+        const dateB = b.dataCreazione ? b.dataCreazione.toDate() : null;
+        return dateB - dateA; // Ordina in ordine decrescente
+      });
+  
+      // Imposta le schede di lavoro
       setWorkCards(workCardList);
     } catch (error) {
       console.error("Errore nel recupero delle schede di lavoro: ", error);
@@ -57,7 +73,7 @@ export function SchedeDiLavoro() {
   };
 
   useEffect(() => {
-    fetchWorkCards();
+    fetchWorkCards(); // Fetch iniziale senza ricerca
   }, []);
 
   const handleRowSelectionChange = (newSelection) => {
@@ -100,6 +116,15 @@ export function SchedeDiLavoro() {
     navigate(`/aggiungischeda1/${id}`);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value); // Aggiorna lo stato dell'input di ricerca
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchWorkCards(searchTerm); // Effettua la ricerca quando l'input cambia
+  };
+
   const columns = [
     {
       field: "id",
@@ -122,10 +147,12 @@ export function SchedeDiLavoro() {
       renderCell: (params) => (
         <span
           className="p-1 rounded-4"
-          style={{ cursor: "pointer", textDecoration: "underline" }} // Aggiungi uno stile cliccabile
-          onClick={() => {navigate("/dashboardcustomer/" + params.row.idCustomer)}} // Chiamata per navigare
+          style={{ cursor: "pointer", textDecoration: "underline" }}
+          onClick={() => {
+            navigate("/dashboardcustomer/" + params.row.idCustomer);
+          }}
         >
-          {params.row.cliente} {/* Nome del cliente da visualizzare */}
+          {params.row.cliente}
         </span>
       ),
     },
@@ -139,9 +166,8 @@ export function SchedeDiLavoro() {
       headerName: "Data",
       width: 130,
       renderCell: (params) => {
-        // Se il valore è un oggetto timestamp di Firebase, converti in Date prima di formattare
         const date = params.value ? moment(params.value.toDate()) : null;
-        return date && date.isValid() ? date.format("DD/MM/YYYY") : "N/A"; // Formatta in 'dd/mm/yyyy' o mostra 'N/A'
+        return date && date.isValid() ? date.format("DD/MM/YYYY") : "N/A";
       },
     },
   ];
@@ -155,13 +181,38 @@ export function SchedeDiLavoro() {
       >
         <div className="container-fluid">
           <div className="d-flex justify-content-between align-items-center">
-            <h2>Schede di Lavoro</h2>
-            <div>
+            <h2 className="mb-0">Schede di Lavoro</h2>
+          </div>
+
+          <div className="d-flex align-items-center justify-content-between">
+            <form
+              className="d-flex align-items-center mt-4"
+              onSubmit={handleSearch}
+            >
+              <TextField
+                label="Cerca per Targa"
+                variant="outlined"
+                value={searchTerm}
+                onChange={handleSearchChange} // Gestisci l'input di ricerca
+                className="me-2"
+              />
+              <Button
+                className="me-2"
+                type="submit"
+                color="primary"
+                variant="contained"
+              >
+                Cerca
+              </Button>
+            </form>
+            <div className="d-flex align-items-center">
               <Button
                 className="me-2"
                 color="primary"
                 variant="contained"
-                onClick={() => {navigate("/aggiungischeda")}}
+                onClick={() => {
+                  navigate("/aggiungischeda");
+                }}
               >
                 Aggiungi
               </Button>
