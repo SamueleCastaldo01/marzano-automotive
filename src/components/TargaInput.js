@@ -34,10 +34,7 @@ const TargaInput = ({
   const [showButtonVeic, setShowButtonVeic] = useState(false);
   const [loading2, setLoading2] = useState(true);
 
-
-  const vuota = () => {
-
-  }
+  const vuota = () => {};
 
   const handleTargaSaved = (newTarga) => {
     setTarga(newTarga); // Imposta la nuova targa quando un veicolo è aggiunto
@@ -168,58 +165,62 @@ const TargaInput = ({
                 Aggiungi Veicolo Cliente già Esistente
               </Button>
             </div>
+
+            {booVeic && (
+              <>
+                {loading2 ? (
+                  <div className="mt-4">
+                    <CircularProgress size={24} color="inherit" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="mt-4 d-flex">
+                      <Autocomplete
+                        options={clienti}
+                        getOptionLabel={(option) => option.username || ""} // Utilizza il campo username
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Seleziona Cliente"
+                            variant="outlined"
+                            style={{ marginRight: "10px", width: "200px" }}
+                          />
+                        )}
+                        onChange={handleCercaUtente} // Gestisce la selezione del cliente
+                        freeSolo
+                      />
+                      {showButtonVeic && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            setOpenAddDialog(true);
+                          }}
+                        >
+                          Crea Veicolo
+                        </Button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </>
+            )}
           </>
         )}
       </div>
 
-      {booVeic && (
-        <>
-          {loading2 ? (
-            <div className="mt-4">
-              <CircularProgress size={24} color="inherit" />
-            </div>
-          ) : (
-            <>
-              <div className="mt-4 d-flex">
-                <Autocomplete
-                  options={clienti}
-                  getOptionLabel={(option) => option.username || ""} // Utilizza il campo username
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Seleziona Cliente"
-                      variant="outlined"
-                      style={{ marginRight: "10px", width: "200px" }}
-                    />
-                  )}
-                  onChange={handleCercaUtente} // Gestisce la selezione del cliente
-                  freeSolo
-                />
-                {showButtonVeic && 
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setOpenAddDialog(true);
-                  }}
-                >
-                  Crea Veicolo
-                </Button>
-                }
-              </div>
-            </>
-          )}
-        </>
-      )}
-
-        <AddVeicolo
+      <AddVeicolo
         username={username}
-          open={openAddDialog}
-          onClose={() => {setOpenAddDialog(false); setBooVeic(false); setShowButtonVeic(false);}}
-          onTargaSaved={handleTargaSaved}
-          idCustomer={idCustomer}
-          fetchVehicles={vuota}
-        />
+        open={openAddDialog}
+        onClose={() => {
+          setOpenAddDialog(false);
+          setBooVeic(false);
+          setShowButtonVeic(false);
+        }}
+        onTargaSaved={handleTargaSaved}
+        idCustomer={idCustomer}
+        fetchVehicles={vuota}
+      />
     </>
   );
 };
