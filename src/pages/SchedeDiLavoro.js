@@ -114,7 +114,20 @@ export function SchedeDiLavoro() {
         </span>
       ),
     },
-    { field: "cliente", headerName: "Cliente", width: 130 },
+    {
+      field: "cliente",
+      headerName: "Cliente",
+      width: 130,
+      renderCell: (params) => (
+        <span
+          className="p-1 rounded-4"
+          style={{ cursor: "pointer", textDecoration: "underline" }} // Aggiungi uno stile cliccabile
+          onClick={() => {navigate("/dashboardcustomer/" + params.row.idCustomer)}} // Chiamata per navigare
+        >
+          {params.row.cliente} {/* Nome del cliente da visualizzare */}
+        </span>
+      ),
+    },
     { field: "targa", headerName: "Targa", width: 130 },
     { field: "veicolo", headerName: "Veicolo", width: 130 },
     { field: "totale", headerName: "Totale", width: 130 },
