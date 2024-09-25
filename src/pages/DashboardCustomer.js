@@ -5,27 +5,30 @@ import { Button, Paper, Dialog, DialogActions, DialogContentText, DialogContent,
 import EditVeicolo from '../components/EditVeicolo';
 import { useParams } from "react-router-dom";
 import { db } from "../firebase-config"; // Assicurati che il percorso sia corretto
-import { collection, getDocs, deleteDoc, doc, query, where } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, query, where, getDoc } from "firebase/firestore"; // Aggiunto getDoc per ottenere singolo documento
 import { StyledDataGrid, theme } from '../components/StyledDataGrid';
 import AddVeicolo from "../components/AddVeicolo";
 import { itIT } from "@mui/x-data-grid/locales";
 
 export function DashboardCustomer() {
-    const { id } = useParams();
+    const { id } = useParams(); // Questo è l'ID del cliente
     const [openAddDialog, setOpenAddDialog] = useState(false);
     const [vehicles, setVehicles] = useState([]);
     const [selectedVehicleIds, setSelectedVehicleIds] = useState([]);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false); // Stato per la Snackbar
-
     const [editVehicleId, setEditVehicleId] = useState(null);
     const [editOpen, setEditOpen] = useState(false);
-
+    const [username, setUsername] = useState("");
+    const [nome, setNome] = useState("");
+    const [cognome, setCognome] = useState("");
+    // Funzione per gestire l'editing del veicolo
     const handleEdit = (vehicleId) => {
         setEditVehicleId(vehicleId);
         setEditOpen(true);
     };
 
+    // Funzione per gestire la selezione delle righe
     const handleRowSelectionChange = (newSelection) => {
         setSelectedVehicleIds(newSelection);
         if (newSelection.length === 1) {
@@ -35,6 +38,7 @@ export function DashboardCustomer() {
         }
     };
 
+    // Funzione per recuperare i veicoli del cliente
     const fetchVehicles = async () => {
         try {
             const vehicleCollection = collection(db, "veicoloTab");
@@ -50,11 +54,31 @@ export function DashboardCustomer() {
         }
     };
 
+    // Funzione per recuperare lo username del cliente
+    const fetchCustomerUsername = async () => {
+        try {
+            const customerDoc = await getDoc(doc(db, "customersTab", id)); // Prendi il documento del cliente
+            if (customerDoc.exists()) {
+                const customerData = customerDoc.data();
+                setUsername(customerData.username);
+                setNome(customerData.nome);
+                setCognome(customerData.cognome);
+
+            } else {
+                console.log("Nessun documento trovato per il cliente con ID:", id);
+            }
+        } catch (error) {
+            console.error("Errore nel recupero dello username:", error);
+        }
+    };
+
+    // Effetto per recuperare i veicoli e lo username quando il componente viene montato
     useEffect(() => {
         fetchVehicles();
+        fetchCustomerUsername(); // Chiamata per ottenere lo username
     }, [id]);
 
-
+    // Funzione per eliminare i veicoli selezionati
     const handleDelete = async () => {
         const deletePromises = selectedVehicleIds.map((id) => deleteDoc(doc(db, "veicoloTab", id)));
 
@@ -69,10 +93,12 @@ export function DashboardCustomer() {
         }
     };
 
+    // Funzione per confermare l'eliminazione
     const handleConfirmDelete = () => {
         setConfirmOpen(true);
     };
 
+    // Funzione per chiudere la Snackbar
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
@@ -88,7 +114,7 @@ export function DashboardCustomer() {
         <>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
             <div className="container-fluid">
-                <h2>Dashboard Cliente</h2>
+                <h2>Dashboard Cliente - {nome} {cognome}</h2> {/* Visualizza lo username */}
                 <div className="mt-5">
                     <div className="d-flex align-items-center justify-content-between">
                         <h5 className='mb-0'>Veicoli</h5>
@@ -147,6 +173,8 @@ export function DashboardCustomer() {
 
         {/* Dialog per modificare il veicolo */}
         <EditVeicolo open={editOpen} onClose={() => setEditOpen(false)} vehicleId={editVehicleId} fetchVehicles={fetchVehicles} />
+
+        
     </>
     );
 }

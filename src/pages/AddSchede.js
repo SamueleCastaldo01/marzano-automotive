@@ -16,6 +16,7 @@ export function AddSchede() {
   const [recentTarghe, setRecentTarghe] = useState([]);
   const [showAggiungiScheda, setShowAggiungiScheda] = useState(false);
   
+  const [idCust, setIdCust] = useState("");
   const [cliente, setCliente] = useState("");
   const [telefono, setTelefono] = useState("");
   const [veicolo, setVeicolo] = useState("");
@@ -47,6 +48,7 @@ export function AddSchede() {
         const { idCustomer, marca, nomeModello } = veicoloData;
         setVeicolo(`${marca} ${nomeModello}`);
   
+        setIdCust(idCustomer);
         const customerDocRef = doc(db, "customersTab", idCustomer);
         const customerDoc = await getDoc(customerDocRef);
   
@@ -105,6 +107,7 @@ export function AddSchede() {
       }];
   
       const nuovaScheda = {
+        idCustomer: idCust,
         targa,
         cliente,
         telefono,
@@ -115,7 +118,7 @@ export function AddSchede() {
         totale: "0",
         pagato: "0",
         sconto: "0",
-        resta: "0"
+        resto: "0"
       };
   
       const docRef = await addDoc(collection(db, "schedaDiLavoroTab"), nuovaScheda);

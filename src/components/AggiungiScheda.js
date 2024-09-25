@@ -76,8 +76,7 @@ const AggiungiScheda = ({  }) => {
     setPagato(newPagato);
     await updatePagatoInDatabase(newPagato);
   
-    const totaleComplessivo = calculateTotal(manodopera, dataScheda);
-    const resto = (totaleComplessivo - (newPagato ? Number(newPagato) : 0)).toFixed(2); // Usa Number solo se newPagato non è vuoto
+    const resto = ((calculateTotal(manodopera, dataScheda) - pagato) - sconto).toFixed(2); // Usa Number solo se newPagato non è vuoto
     await updateRestoInDatabase(resto);
   };
 
@@ -213,6 +212,7 @@ const AggiungiScheda = ({  }) => {
     const docRef = doc(db, "schedaDiLavoroTab", id);
     await updateDoc(docRef, {
       totale: totaleComplessivo,
+      resto: totaleComplessivo - pagato - sconto
     });
   };
 
