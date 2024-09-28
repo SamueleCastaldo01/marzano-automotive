@@ -214,7 +214,7 @@ const AggiungiScheda = ({  }) => {
     const docRef = doc(db, "schedaDiLavoroTab", id);
     await updateDoc(docRef, {
       totale: totaleComplessivo,
-      resto: totaleComplessivo - pagato - sconto
+      resto: (totaleComplessivo - pagato - sconto).toFixed(2)
     });
   };
 
