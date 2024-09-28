@@ -200,6 +200,14 @@ export function CustomerList() {
           <div className='d-flex justify-content-between align-items-center'>
             <h2>Anagrafica Clienti</h2>
             <div>
+            <Button
+                variant="contained"
+                color='primary'
+                className='me-2'
+                onClick={() => navigate("/addcustomer")} // Passa l'ID del cliente selezionato// Abilita solo se c'è un cliente selezionato
+              >
+                Aggiungi Cliente
+              </Button>
               <Button
                 variant="contained"
                 color='primary'
