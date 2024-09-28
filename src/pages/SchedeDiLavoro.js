@@ -42,10 +42,13 @@ export function SchedeDiLavoro() {
   
       let workCardQuery;
       if (search) {
+        // Trasformiamo la ricerca in uppercase
+        const uppercaseSearch = search.toUpperCase();
+        
         // Se c'è un termine di ricerca, usa where per filtrare i risultati
         workCardQuery = query(
           workCardCollection,
-          where("targa", "==", search)
+          where("targa", "==", uppercaseSearch) // Applica il filtro in uppercase
         );
       } else {
         // Altrimenti, recupera le schede senza filtro
@@ -117,7 +120,8 @@ export function SchedeDiLavoro() {
   };
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value); // Aggiorna lo stato dell'input di ricerca
+    // Aggiorna lo stato dell'input di ricerca trasformandolo in uppercase
+    setSearchTerm(event.target.value.toUpperCase());
   };
 
   const handleSearch = (e) => {
