@@ -236,7 +236,7 @@ export function SchedeDiLavoro() {
           <ThemeProvider theme={theme}>
             <Paper
               className="mt-4"
-              sx={{ height: 500, borderRadius: "8px", overflowX: "auto" }}
+              sx={{ height: 450, borderRadius: "8px", overflowX: "auto" }}
             >
               <StyledDataGrid
                 rows={workCards}
