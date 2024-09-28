@@ -22,6 +22,7 @@ const AggiungiScheda = ({  }) => {
   const [pagato, setPagato] = useState("");
   const [resta, setResta] = useState(0);
   const [sconto, setSconto] = useState("");
+  const [note, setNote] = useState("");
 
   const fetchData = async () => {
     if (!id) return;
@@ -57,6 +58,7 @@ const AggiungiScheda = ({  }) => {
   const handleAddDescription = async () => {
     const newItem = {
       descrizione: "",
+      note: "",
       qt: "1",
       prezzo: "",
       sconto: "0",
@@ -302,16 +304,19 @@ const AggiungiScheda = ({  }) => {
         <div className="descrizione pe-0 col-4 text-center">
           <h5 className="mb-0">Descrizione</h5>
         </div>
+        <div className="descrizione pe-0 col-3 text-center">
+          <h5 className="mb-0">Nota</h5>
+        </div>
         <div className="qt px-0 col-1 text-center">
           <h5 className="mb-0">QtA'</h5>
         </div>
-        <div className="prezzo px-0 col-2 text-center">
+        <div className="prezzo px-0 col-1 text-center">
           <h5 className="mb-0">Prezzo</h5>
         </div>
-        <div className="sconto % px-0 col-2 text-center">
+        <div className="sconto % px-0 col-1 text-center">
           <h5 className="mb-0">Sconto</h5>
         </div>
-        <div className="totale ps-0 col-2 text-center">
+        <div className="totale ps-0 col-1 text-center">
           <h5 className="mb-0">Totale</h5>
         </div>
       </div>
@@ -335,6 +340,17 @@ const AggiungiScheda = ({  }) => {
               }
             />
           </div>
+          <div className="note px-0 col-3 text-center">
+            <TextField
+              className="w-100 h-100 mt-2"
+              variant="outlined"
+              color="tertiary"
+              value={item.note || ""}
+              onChange={(e) =>
+                handleFieldChange(index, "note", e.target.value)
+              }
+            />
+          </div>
           <div className="qt px-0 col-1 text-center">
             <TextField
               className="w-100 mt-2"
@@ -345,7 +361,7 @@ const AggiungiScheda = ({  }) => {
               onChange={(e) => handleFieldChange(index, "qt", e.target.value)}
             />
           </div>
-          <div className="prezzo px-0 col-2 text-center">
+          <div className="prezzo px-0 col-1 text-center">
             <TextField
               className="w-100 mt-2"
               variant="outlined"
@@ -362,7 +378,7 @@ const AggiungiScheda = ({  }) => {
               }
             />
           </div>
-          <div className="sconto % px-0 col-2 text-center">
+          <div className="sconto % px-0 col-1 text-center">
             <TextField
               className="w-100 mt-2"
               variant="outlined"
@@ -379,7 +395,7 @@ const AggiungiScheda = ({  }) => {
               }
             />
           </div>
-          <div className="totale ps-0 col-2 text-center">
+          <div className="totale ps-0 col-1 text-center">
             <TextField
               className="w-100 mt-2"
               variant="outlined"
@@ -399,7 +415,7 @@ const AggiungiScheda = ({  }) => {
       {manodopera.map((item, index) => (
         <div className="row d-flex align-items-center" key={index}>
           <div className="descrizione pe-0 col-1 text-center"></div>
-          <div className="descrizione px-0 col-4 text-center">
+          <div className="descrizione px-0 col-7 text-center">
             <TextField
               className="w-100 h-100 mt-2"
               variant="outlined"
@@ -420,7 +436,7 @@ const AggiungiScheda = ({  }) => {
               }
             />
           </div>
-          <div className="prezzo px-0 col-2 text-center">
+          <div className="prezzo px-0 col-1 text-center">
             <TextField
               className="w-100 mt-2"
               variant="outlined"
@@ -437,7 +453,7 @@ const AggiungiScheda = ({  }) => {
               }
             />
           </div>
-          <div className="sconto % px-0 col-2 text-center">
+          <div className="sconto % px-0 col-1 text-center">
             <TextField
               className="w-100 mt-2"
               variant="outlined"
@@ -454,7 +470,7 @@ const AggiungiScheda = ({  }) => {
               }
             />
           </div>
-          <div className="totale ps-0 col-2 text-center">
+          <div className="totale ps-0 col-1 text-center">
             <TextField
               className="w-100 mt-2"
               variant="outlined"

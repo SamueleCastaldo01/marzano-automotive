@@ -176,7 +176,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                 </div>
             </DialogContent>
             <DialogActions style={{ backgroundColor: "#1E1E1E" }}>
-                <Button onClick={onClose} color="secondary">
+                <Button onClick={onClose} color="error" variant="contained">
                     Annulla
                 </Button>
                 <Button onClick={handleAddVehicle} variant="contained" color="primary">

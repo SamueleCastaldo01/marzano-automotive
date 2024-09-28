@@ -169,7 +169,7 @@ const EditVeicolo = ({ open, onClose, vehicleId, fetchVehicles }) => {
                 </div>
             </DialogContent>
             <DialogActions style={{backgroundColor: "#1E1E1E" }}>
-                <Button onClick={onClose} color="secondary">
+                <Button onClick={onClose} variant="contained" color="error">
                     Annulla
                 </Button>
                 <Button onClick={handleEditVehicle} variant="contained" color="primary">

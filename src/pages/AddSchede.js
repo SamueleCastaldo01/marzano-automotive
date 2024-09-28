@@ -92,9 +92,10 @@ export function AddSchede() {
     try {
       const dataScheda = [{
         descrizione: "",
-        qt: "",
+        note: "",
+        qt: "1",
         prezzo: "",
-        sconto: "",
+        sconto: "0",
         totale: "",
       }];
   
