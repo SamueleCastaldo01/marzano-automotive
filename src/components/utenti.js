@@ -1,6 +1,6 @@
 var s1="Rt6mO4JoPDPVB9tHJ00KotJixV32"  //sono io
-var s2="FujHVcA8u2QmFmKu9anCdugTByx2"   //Papà
-var s5="gKV9G0Q3B7gvHX3ISXJO3HwTCmT2" //Davide Liguori
+var s2="FujHVcA8u2QmFmKu9anCdugTByx2"   //
+var s5="1vu0FOZ4eYU3t5riAWsqxmFUSV23" //MarzanoDev
 var d1= "7JUgxspZncO0WD8H8Z7ANV0UuAA3"  //dipendente1
 var g1= "wX8dxc9QOsYEIqYWjZpMvQfLPsu1"
 
