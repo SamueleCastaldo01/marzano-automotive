@@ -67,6 +67,7 @@ const forgotPassword = () => {
             <div className="mb-md-5 mt-md-4 pb-5">
 
               <h2 className="fw-bold mb-2 text-uppercase">Login</h2>
+              <h2 className="fw-bold mb-2 text-uppercase">Supervisore</h2>
               <p className="text-white-50 mb-5">Please enter your email and password</p>
 
               <div className="form-outline form-white mb-4">
@@ -92,8 +93,9 @@ const forgotPassword = () => {
               </div>
             </div>
             <div>
-              <p className="mb-0">Do not have an account? <a onClick={singup} className="text-white-50 fw-bold">SignUp</a>
-              </p>
+            <p className="mb-0">Accedi come utente <a style={{ cursor: 'pointer' }} onClick={() => {navigate("/loginuser")}} className="text-white-50 fw-bold">Accedi</a></p>
+            {/** <p className="mb-0">Do not have an account? <a onClick={singup} className="text-white-50 fw-bold">SignUp</a>
+              </p> */}
             </div>
 
           </div>

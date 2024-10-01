@@ -44,7 +44,7 @@ return (
     <Routes location={location} key={location.pathname}>
       {/**qui ci vanno quelli che non servono i permessi, o se ne creano degli altri */}
 
-    <Route element={<PrivateRoutes isAuth={isAuth}/>}> 
+    <Route element={<PrivateRoutes isAuth={isAuth} isAuthUser={isAuthUser}/>}> 
     <Route element={<PrivatePerm/>}>
 
     <Route path="/" element={<Homepage />} /> 
@@ -68,6 +68,9 @@ return (
     <Route path="/loginuser" element={<LoginUser/>} />
     <Route path="/block" element={<Page_per/>} />
     {isAuth ? <Route path="*" element={<Page_per /> }/> :
+              <Route path="*" element={<Login  />}/>    }
+
+    {isAuthUser ? <Route path="*" element={<UserVeicoli /> }/> :
               <Route path="*" element={<Login  />}/>    }
 
 
