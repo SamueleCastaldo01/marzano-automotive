@@ -11,11 +11,12 @@ import { AddSchede } from '../pages/AddSchede';
 import AggiungiScheda from './AggiungiScheda';
 import Page_per from '../pages/Page_per';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation} from "react-router-dom";
-import {PrivateRoutes, PrivatePerm} from '../components/PrivateRoutes';
+import {PrivateRoutes, PrivatePerm, PrivateRoutesUser} from '../components/PrivateRoutes';
 import { AnimatePresence } from 'framer-motion';
 import moment from 'moment/moment';
 import 'moment/locale/it'
 import { AddCliente } from '../pages/AddCliente';
+import { UserVeicoli } from '../pages/UserVeicoli';
 
 
 
@@ -26,6 +27,8 @@ function AnimateRoutes ()  {
     const location = useLocation();
     //const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
     const isAuth = useSelector((state) => state.auth.isAuth);
+    const isAuthUser = useSelector((state) => state.userAuth.isAuthUser); //questo per gli utenti
+
 
     const timeElapsed = Date.now();  //prende la data attuale in millisecondi
     const today = new Date(timeElapsed);    //converte nel tipo data
@@ -55,6 +58,12 @@ return (
     
     </Route>
     </Route>
+
+    <Route element={<PrivateRoutesUser isAuthUser={isAuthUser}/>}> 
+    <Route path="/userveicoli" element={<UserVeicoli />} /> 
+    </Route>
+
+
     <Route path="/login" element={<Login  />} />
     <Route path="/loginuser" element={<LoginUser/>} />
     <Route path="/block" element={<Page_per/>} />

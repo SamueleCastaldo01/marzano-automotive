@@ -4,11 +4,18 @@ import { motion } from "framer-motion";
 import { TextField, Button, Typography } from "@mui/material";
 import { db } from "../firebase-config"; // Assicurati di avere il percorso corretto
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { loginUser } from "../redux/reducers/userAuthSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 export function LoginUser() {
+    const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
+
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -26,8 +33,12 @@ export function LoginUser() {
       if (querySnapshot.empty) {
         setMessage("Credenziali non valide. Riprova.");
       } else {
+        const userData = querySnapshot.docs[0].data(); // Ottieni i dati dell'utente
         setMessage("Login effettuato con successo!");
-        // Puoi anche salvare lo stato dell'utente qui se necessario
+        
+        // Dispatch per impostare l'utente come autenticato
+        dispatch(loginUser({ username: userData.username, ...userData })); // Puoi aggiungere altri dettagli se necessario
+        navigate("/userveicoli");
       }
     } catch (error) {
       console.error("Errore durante il login: ", error);

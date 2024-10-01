@@ -15,6 +15,7 @@ import MuiBottomNavigationAction from "@mui/material/BottomNavigationAction";
 import { tutti } from './components/utenti';
 import { useDispatch, useSelector } from "react-redux";
 import { loginU, logoutU } from './redux/reducers/authSlice'; 
+import { loginUser, logoutUser } from './redux/reducers/userAuthSlice';
 
 // Styled BottomNavigationAction
 const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
@@ -45,8 +46,8 @@ function App() {
   // SignOut function
   const signUserOut = () => {
     signOut(auth).then(() => {
-      // Non è più necessario gestire localStorage; Redux gestirà lo stato
       dispatch(logoutU()); // Usa logoutU qui
+      dispatch(logoutUser());
     });
   };
 

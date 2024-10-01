@@ -8,8 +8,15 @@ export function PrivateRoutes ({isAuth})  {
     );
 }
 
+export function PrivateRoutesUser ({isAuthUser})  {
+    console.log(isAuthUser);
+    return(
+        isAuthUser ? <Outlet/> : <Navigate to="/loginuser"/>
+    );
+}
+
 export function PrivatePerm({}) {
-    let ta= tutti.includes(localStorage.getItem("uid"))  //se trova id esatto nell'array rispetto a quello corrente, ritorna true
+    let ta= tutti.includes(localStorage.getItem("uid"))  //questo è un ulteriore controllo, solo per gli utenti supervisori, per i permessi
     return (
         ta ? <Outlet/> : <Navigate to="/block"/>
     );
