@@ -13,6 +13,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 import MuiBottomNavigationAction from "@mui/material/BottomNavigationAction";
 import { tutti } from './components/utenti';
+import { useDispatch, useSelector } from "react-redux";
+import { loginU, logoutU } from './redux/reducers/authSlice'; 
 
 // Styled BottomNavigationAction
 const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
@@ -20,28 +22,31 @@ const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
 `);
 
 function App() {
-  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+  //const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
   const matches = useMediaQuery("(max-width:920px)");
   const auth = getAuth();
+  const dispatch = useDispatch();
+  const isAuth = useSelector(state => state.auth.isAuth);
 
   useEffect(() => {
     // Monitoraggio dello stato di autenticazione
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        localStorage.setItem("uid", user.uid);
+        // Se l'utente è autenticato, dispatch loginU
+        dispatch(loginU({ email: user.email, uid: user.uid })); // Usa loginU qui
       } else {
-        localStorage.removeItem("uid");
+        dispatch(logoutU()); // Se l'utente esce, dispatch logoutU
       }
     });
 
     return () => unsubscribe(); // Cleanup all'unmount del componente
-  }, [auth]);
+  }, [auth, dispatch]);
 
   // SignOut function
   const signUserOut = () => {
     signOut(auth).then(() => {
-      localStorage.clear();
-      setIsAuth(false);
+      // Non è più necessario gestire localStorage; Redux gestirà lo stato
+      dispatch(logoutU()); // Usa logoutU qui
     });
   };
 

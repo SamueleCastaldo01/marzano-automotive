@@ -5,8 +5,11 @@ import {auth, providerGoogle, providerFacebook} from "../firebase-config";
 import {signInWithPopup} from 'firebase/auth';
 import {useNavigate} from "react-router-dom";
 import { login } from '../firebase-config';
+import { useDispatch } from 'react-redux';
+import { loginU } from '../redux/reducers/authSlice';
 
-function Login({setIsAuth}) {
+function Login({}) {
+  const dispatch = useDispatch();
   let navigate = useNavigate();  
 
   const emailRef = useRef();      //attributes
@@ -22,7 +25,7 @@ function Login({setIsAuth}) {
       localStorage.setItem("email", email);
       localStorage.setItem("profilePic", profilePic);
       localStorage.setItem("isAuth", true);
-      setIsAuth(true);  //flag the user is logged in
+      dispatch(loginU({ email }));
       navigate("/");  //returns it to the home page
     })
   }
@@ -34,7 +37,7 @@ function Login({setIsAuth}) {
   
         localStorage.setItem("email", email);
         localStorage.setItem("isAuth", true);
-        setIsAuth(true);  //flag the user is logged in
+        dispatch(loginU({ email }));
         navigate("/");  //returns it to the home page
       })
     } catch{

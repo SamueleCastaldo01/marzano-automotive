@@ -1,7 +1,9 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import Homepage from '../pages/Homepage'
+import { useSelector } from 'react-redux'; 
 import Login from '../pages/Login';
+import { LoginUser } from '../pages/LoginUser';
 import { CustomerList } from '../pages/CustomerList';
 import { DashboardCustomer } from '../pages/DashboardCustomer';
 import { SchedeDiLavoro } from '../pages/SchedeDiLavoro';
@@ -22,7 +24,8 @@ function AnimateRoutes ()  {
     
 
     const location = useLocation();
-    const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+    //const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+    const isAuth = useSelector((state) => state.auth.isAuth);
 
     const timeElapsed = Date.now();  //prende la data attuale in millisecondi
     const today = new Date(timeElapsed);    //converte nel tipo data
@@ -52,10 +55,11 @@ return (
     
     </Route>
     </Route>
-    <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+    <Route path="/login" element={<Login  />} />
+    <Route path="/loginuser" element={<LoginUser/>} />
     <Route path="/block" element={<Page_per/>} />
     {isAuth ? <Route path="*" element={<Page_per /> }/> :
-              <Route path="*" element={<Login setIsAuth={setIsAuth} />}/>    }
+              <Route path="*" element={<Login  />}/>    }
 
 
     </Routes>
