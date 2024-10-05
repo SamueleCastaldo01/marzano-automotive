@@ -8,6 +8,8 @@ import { loginUser } from "../redux/reducers/userAuthSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logoutU } from "../redux/reducers/authSlice";
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { NavMobile } from "../components/NavMobile";
 
 
 export function LoginUser() {
@@ -50,13 +52,13 @@ export function LoginUser() {
 
   return (
     <>
+    <NavMobile/>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <div className="text-center px-5">
-        <h1>Marzano Automotive</h1>
+        <div className="text-center px-5" style={{marginTop: "70px"}}>
         <h2 className="mt-5">Accedi</h2>
       <form onSubmit={handleLogin}>
         <TextField
@@ -76,11 +78,16 @@ export function LoginUser() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button variant="contained" color="primary" type="submit">
-          Login
+        <Button className="mt-3" style={{height: "50px", width: "100%"}} variant="contained" color="primary" type="submit">
+          Accedi
         </Button>
       </form>
       {message && <Typography variant="body1">{message}</Typography>}
+
+      <div style={{marginTop: "100px"}} className=" text-start">
+        <h2>Contattaci</h2>
+        <h6><WhatsAppIcon/> Numero</h6>
+      </div>
       </div>
       </motion.div>
     </>

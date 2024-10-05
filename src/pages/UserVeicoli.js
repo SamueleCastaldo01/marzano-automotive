@@ -3,6 +3,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config"; // Assicurati che il percorso sia corretto
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Importa CircularProgress
 import { NavMobile } from "../components/NavMobile";
