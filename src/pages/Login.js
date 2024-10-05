@@ -8,6 +8,7 @@ import { login } from '../firebase-config';
 import { useDispatch } from 'react-redux';
 import { loginU } from '../redux/reducers/authSlice';
 import { supa } from '../components/utenti';
+import { logoutUser } from '../redux/reducers/userAuthSlice';
 
 function Login({}) {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ function Login({}) {
         localStorage.setItem("isAuth", true);
         localStorage.setItem("uid", uid);
         dispatch(loginU({ email }));
+        dispatch(logoutUser()); //in caso sia loggato come utente, allora mi disconetto
         navigate("/");  //returns it to the home page
       }
 

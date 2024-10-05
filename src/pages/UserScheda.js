@@ -69,13 +69,14 @@ export function UserScheda() {
 
           {/* Ciclo sui dati dell'array "dataScheda" */}
           <div className="mt-5">
-            {scheda.dataScheda.map((item, index) => (
-            <>
-              <div key={index} className="row rounded-2 rounded-bottom-0" style={{backgroundColor: "#224072"}}>
+            <div className="row rounded-2 rounded-bottom-0" style={{backgroundColor: "#224072"}}>
                 <div className="col-10 ps-1" ><h5 className="mt-2"><strong>Descrizione</strong> </h5></div>
                 <div className="col-2 ps-1" > <h5 className="mt-2">Qt:</h5></div>
-              </div>
-              <div className="row">
+            </div>
+
+            {scheda.dataScheda.map((item, index) => (
+            <>
+              <div className="row" key={index}>
                 <div  className="col-10 border border-1"><p className="mb-0 py-2">{item.descrizione}</p></div>
                 <div className="col-2 border border-1 text-center"><p className="mb-0 py-2">{item.qt}</p></div>
               </div>

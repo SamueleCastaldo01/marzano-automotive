@@ -7,6 +7,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { loginUser } from "../redux/reducers/userAuthSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { logoutU } from "../redux/reducers/authSlice";
 
 
 export function LoginUser() {
@@ -38,7 +39,8 @@ export function LoginUser() {
         
         // Dispatch per impostare l'utente come autenticato
         dispatch(loginUser({ username: userData.username, ...userData })); // Puoi aggiungere altri dettagli se necessario
-        navigate("/userveicoli");
+        dispatch(logoutU()); //in caso in cui sono loggato come supervisore, mi disconetto
+        navigate("/userhome");
       }
     } catch (error) {
       console.error("Errore durante il login: ", error);
