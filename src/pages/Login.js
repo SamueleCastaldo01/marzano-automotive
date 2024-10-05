@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import { login } from '../firebase-config';
 import { useDispatch } from 'react-redux';
 import { loginU } from '../redux/reducers/authSlice';
+import { supa } from '../components/utenti';
 
 function Login({}) {
   const dispatch = useDispatch();
@@ -21,12 +22,17 @@ function Login({}) {
     signInWithPopup(auth, providerGoogle).then((result) => {
       const email = result.user.email;
       const profilePic = result.user.photoURL;
+      const uid = result.user.uid;
 
-      localStorage.setItem("email", email);
-      localStorage.setItem("profilePic", profilePic);
-      localStorage.setItem("isAuth", true);
-      dispatch(loginU({ email }));
-      navigate("/");  //returns it to the home page
+      if(supa.includes(uid)) {   //controllo per andare avanti, oppure da problemi, questi sono i permessi supervisore
+        localStorage.setItem("email", email);
+        localStorage.setItem("profilePic", profilePic);
+        localStorage.setItem("isAuth", true);
+        localStorage.setItem("uid", uid);
+        dispatch(loginU({ email }));
+        navigate("/");  //returns it to the home page
+      }
+
     })
   }
 //___________________________________________________________________________________________

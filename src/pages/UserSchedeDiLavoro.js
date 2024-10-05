@@ -11,7 +11,7 @@ export function UserSchedeDiLavoro() {
         transition={{ duration: 0.7 }}
       >
        
-        <div className="text-center" style={{marginTop: "110px"}}>
+        <div className="text-center" style={{marginTop: "110px", marginBottom: "100px"}}>
         <h1>Schede di lavoro</h1>
         </div>
       </motion.div>

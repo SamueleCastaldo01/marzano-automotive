@@ -12,7 +12,7 @@ import MiniDrawer from "./components/MiniDrawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 import MuiBottomNavigationAction from "@mui/material/BottomNavigationAction";
-import { tutti } from './components/utenti';
+import { tutti, supa } from './components/utenti';
 import { useDispatch, useSelector } from "react-redux";
 import { loginU, logoutU } from './redux/reducers/authSlice'; 
 import { loginUser, logoutUser } from './redux/reducers/userAuthSlice';
@@ -27,7 +27,6 @@ function App() {
   const matches = useMediaQuery("(max-width:920px)");
   const auth = getAuth();
   const dispatch = useDispatch();
-  const isAuth = useSelector(state => state.auth.isAuth);
 
   useEffect(() => {
     // Monitoraggio dello stato di autenticazione
@@ -47,7 +46,7 @@ function App() {
   const signUserOut = () => {
     signOut(auth).then(() => {
       dispatch(logoutU()); // Usa logoutU qui
-      dispatch(logoutUser());
+      dispatch(logoutUser());  //logout per l'utente
     });
   };
 
@@ -71,12 +70,13 @@ function AppContent({ signUserOut, matches }) {
   // Verifica se l'utente si trova nelle pagine di login o block
   const isLoginPage = location.pathname === "/login";
   const isBlockPage = location.pathname === "/block";
-  let ta= tutti.includes(localStorage.getItem("uid"))
+  let ta= supa.includes(localStorage.getItem("uid"))
+  const isAuth = useSelector(state => state.auth.isAuth);
 
   return (
     <>
       {/* Mostra MiniDrawer solo se non è la pagina di login o block e lo schermo è grande */}
-      {!matches && !isLoginPage && !isBlockPage && ta && <MiniDrawer signUserOut={signUserOut} />}
+      {!matches && !isLoginPage && !isBlockPage && ta && isAuth && <MiniDrawer signUserOut={signUserOut} />}
 
       <Box
   component="main"
