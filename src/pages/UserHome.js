@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config"; // Assicurati che il percorso del db sia corretto
 import { useNavigate } from "react-router-dom";
+import { NavMobile } from "../components/NavMobile";
 
 export function UserHome() {
   const [nome, setNome] = useState("");
@@ -47,15 +48,13 @@ export function UserHome() {
 
   return (
     <>
+     <NavMobile />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
         className="text-center"
       >
-        <div style={{backgroundColor: "#224072"}} className=" position-absolute top-0 w-100 p-3 text-start">
-            <h2 className="mb-0">Marzano Automotive</h2>
-        </div>
         
         <div style={{marginTop: "110px"}}>
         <h2>Benvenuto {nome} {cognome}</h2>

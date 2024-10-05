@@ -3,7 +3,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config"; // Assicurati che il percorso sia corretto
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
-
+import { NavMobile } from "../components/NavMobile";
 
 export function UserVeicoli() {
   const [veicoli, setVeicoli] = useState([]);
@@ -21,7 +21,10 @@ export function UserVeicoli() {
 
         // 1. Query per ottenere l'ID del cliente da customersTab
         const customersRef = collection(db, "customersTab");
-        const customerQuery = query(customersRef, where("username", "==", username));
+        const customerQuery = query(
+          customersRef,
+          where("username", "==", username)
+        );
         const customerSnapshot = await getDocs(customerQuery);
 
         if (customerSnapshot.empty) {
@@ -33,7 +36,10 @@ export function UserVeicoli() {
 
         // 2. Query per ottenere i veicoli associati a questo ID cliente da veicoloTab
         const veicoliRef = collection(db, "veicoloTab");
-        const veicoliQuery = query(veicoliRef, where("idCustomer", "==", customerId));
+        const veicoliQuery = query(
+          veicoliRef,
+          where("idCustomer", "==", customerId)
+        );
         const veicoliSnapshot = await getDocs(veicoliQuery);
 
         if (veicoliSnapshot.empty) {
@@ -58,25 +64,33 @@ export function UserVeicoli() {
   }, [username]);
 
   return (
+    <>
+    <NavMobile />
     <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.7 }}
-  >
-      <h1>Veicoli</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {!error && veicoli.length === 0 && <p>Nessun veicolo trovato per questo utente.</p>}
-      {veicoli.length > 0 && (
-        <ul>
-          {veicoli.map((veicolo) => (
-            <li key={veicolo.id}>
-              <p>Marca: {veicolo.marca}</p>
-              <p>Modello: {veicolo.nomeModello}</p>
-              <p>Targa: {veicolo.targa}</p>
-            </li>
-          ))}
-        </ul>
-      )}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.7 }}
+    >
+    
+      <div style={{marginTop: "110px"}}>
+        <h1>Veicoli</h1>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {!error && veicoli.length === 0 && (
+          <p>Nessun veicolo trovato per questo utente.</p>
+        )}
+        {veicoli.length > 0 && (
+          <ul>
+            {veicoli.map((veicolo) => (
+              <li key={veicolo.id}>
+                <p>Marca: {veicolo.marca}</p>
+                <p>Modello: {veicolo.nomeModello}</p>
+                <p>Targa: {veicolo.targa}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </motion.div>
+    </>
   );
 }
