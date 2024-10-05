@@ -38,61 +38,68 @@ function BottomNavi ()  {
 
 return (
 
-<Paper  sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-<BottomNavigation 
-        sx={{
+<Paper 
+  sx={{ 
+    position: 'fixed', 
+    bottom: 0, 
+    left: 0, 
+    right: 0, 
+    boxShadow: '0px -2px 10px rgba(0, 0, 0, 0.3)' // Ombra sopra la Navbar
+  }} 
+  elevation={3}
+>
+  <BottomNavigation 
+    sx={{
       bgcolor: '#224072',
       '& .Mui-selected': {
-      '& .MuiBottomNavigationAction-label': {
-        fontSize: theme => theme.typography.caption,
-        transition: 'none',
-        fontWeight: 'bold',
-        lineHeight: '20px'
-      },
-      '& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label': {
-        color: theme => theme.palette.primary.main
-        }}}} showLabels>
-        {isAuth &&
-        <BottomNavigationAction
-          component={Link}
-          className="linq"
-          value="home"
-          to="/"
-           label="Home"
+        '& .MuiBottomNavigationAction-label': {
+          fontSize: theme => theme.typography.caption,
+          fontWeight: 'bold', // Mantieni il testo in grassetto
+          lineHeight: '20px'
+        },
+        '& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label': {
+          color: theme => theme.palette.primary.main, // Colore icona e testo
+        }
+      }
+    }} 
+    showLabels
+  >
+    {isAuth && (
+      <BottomNavigationAction
+        component={Link}
+        className="linq"
+        value="home"
+        to="/"
+        label="Home"
         icon={<HomeIcon color={location.pathname === '/' ? '' : 'inherit'} />}
-           />
-          }
-        { isAuthUser &&
+      />
+    )}
+    {isAuthUser && (
+      <>
         <BottomNavigationAction
           component={Link}
           className="linq"
           value="home"
           to="/userhome"
-           label="Home"
-        icon={<HomeIcon color={location.pathname === '/userhome' ? '' : 'inherit'} />}
-           />
-          }
-        { isAuthUser &&
+          label="Home"
+          icon={<HomeIcon color={location.pathname === '/userhome' ? '' : 'inherit'} />}
+        />
         <BottomNavigationAction
           component={Link}
           className="linq"
           value="home"
           to="/userveicoli"
-           label="I tuoi Veicoli"
-        icon={<DirectionsCarIcon color={location.pathname === '/userveicoli' ? '' : 'inherit'} />}
-           />
-          }
-        { isAuthUser &&
+          label="I tuoi Veicoli"
+          icon={<DirectionsCarIcon color={location.pathname === '/userveicoli' ? '' : 'inherit'} />}
+        />
         <BottomNavigationAction
           component={Link}
           className="linq"
           value="home"
           to="/userschededilavoro"
-           label="Schede di Lavoro"
-        icon={<DocumentScannerIcon color={location.pathname === '/userschededilavoro' ? '' : 'inherit'} />}
-           />
-          }
-          { isAuthUser &&
+          label="Schede"
+          icon={<DocumentScannerIcon color={location.pathname === '/userschededilavoro' ? '' : 'inherit'} />}
+        />
         <BottomNavigationAction
           component={Link}
           className="linq"
@@ -100,20 +107,22 @@ return (
           to="/profilo"
           label="Profilo"
           icon={<PersonIcon color={(location.pathname === '/profilo' || location.pathname === '/login') ? '' : 'inherit'} />}
-           />
-          }
-         {isAuth &&
-        <BottomNavigationAction
-          component={Link}
-          className="linq"
-          value="riepilogo"
-          to="/riepilogo"
-           label="Riepilogo" 
-           icon={<HistoryIcon color={(location.pathname === '/riepilogo') ? '' : 'inherit'} />}
-           />
-          }
-</BottomNavigation>
+        />
+      </>
+    )}
+    {isAuth && (
+      <BottomNavigationAction
+        component={Link}
+        className="linq"
+        value="riepilogo"
+        to="/riepilogo"
+        label="Riepilogo" 
+        icon={<HistoryIcon color={location.pathname === '/riepilogo' ? '' : 'inherit'} />}
+      />
+    )}
+  </BottomNavigation>
 </Paper>
+
 
     )
 

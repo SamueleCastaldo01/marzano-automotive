@@ -4,10 +4,12 @@ import { db } from "../firebase-config"; // Assicurati che il percorso sia corre
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress'; // Importa CircularProgress
 import { NavMobile } from "../components/NavMobile";
 
 export function UserVeicoli() {
   const [veicoli, setVeicoli] = useState([]);
+  const [loading, setLoading] = useState(true); // Aggiungi stato per il caricamento
   const [error, setError] = useState(null);
 
   // Ottieni l'username dal Redux store
@@ -58,6 +60,8 @@ export function UserVeicoli() {
       } catch (err) {
         console.error("Errore durante il recupero dei veicoli:", err);
         setError(err.message);
+      } finally {
+        setLoading(false); // Imposta il caricamento su false alla fine
       }
     };
 
@@ -66,33 +70,45 @@ export function UserVeicoli() {
 
   return (
     <>
-    <NavMobile />
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.7 }}
-    >
-    
-      <div style={{marginTop: "110px", marginBottom: "100px"}} className="px-4 text-center">
-        <h1>I tuoi Veicoli</h1>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {!error && veicoli.length === 0 && (
-          <p>Nessun veicolo trovato per questo utente.</p>
-        )}
-        {veicoli.length > 0 && (
-         <>
-            {veicoli.map((veicolo) => (
-                <>
-                <div key={veicoli.id} className="mt-5">
-                    <Button className="w-100" style={{height: "150px", fontSize: "20px"}} variant="contained">
-                        Targa: {veicolo.targa} <br></br>{veicolo.marca} {veicolo.nomeModello}</Button>
+      <NavMobile />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.7 }}
+      >
+        <div style={{ marginTop: "110px", marginBottom: "100px" }} className="px-4 text-center">
+          <h1>I tuoi Veicoli</h1>
+
+          {loading && (
+            <div style={{ marginTop: "20px" }}>
+              <CircularProgress /> {/* Mostra la progress bar durante il caricamento */}
+            </div>
+          )}
+
+          {error && <p style={{ color: "red" }}>{error}</p>}
+
+          {!loading && !error && veicoli.length === 0 && (
+            <p>Nessun veicolo trovato per questo utente.</p>
+          )}
+
+          {!loading && veicoli.length > 0 && (
+            <>
+              {veicoli.map((veicolo) => (
+                <div key={veicolo.id} className="mt-5">
+                  <Button
+                    className="w-100"
+                    style={{ height: "150px", fontSize: "20px" }}
+                    variant="contained"
+                  >
+                    Targa: {veicolo.targa} <br />
+                    {veicolo.marca} {veicolo.nomeModello}
+                  </Button>
                 </div>
-              </>
-            ))}
-        </>
-        )}
-      </div>
-    </motion.div>
+              ))}
+            </>
+          )}
+        </div>
+      </motion.div>
     </>
   );
 }
