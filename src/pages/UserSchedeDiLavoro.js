@@ -4,6 +4,7 @@ import { collection, query, where, getDocs, limit } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { NavMobile } from "../components/NavMobile";
 import { Button, TextField } from "@mui/material";
+import FindInPageIcon from '@mui/icons-material/FindInPage';
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -152,16 +153,15 @@ export function UserSchedeDiLavoro() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <div className="text-center px-4" style={{ marginTop: "110px", marginBottom: "100px" }}>
-          <h1>Schede di lavoro</h1>
-
-          {/* Campo di ricerca per targa */}
-          <TextField
+        <div className="mainMobileUser text-center px-4" style={{ marginTop: "70px", marginBottom: "100px" }}>
+            <div >
+            <h1 className="py-2 rounded rounded-2" style={{ backgroundColor: "#333" }}>Schede di lavoro <FindInPageIcon style={{fontSize: "40px"}}/></h1>
+            <TextField
             label="Cerca per Targa"
             variant="outlined"
             value={searchTerm}
             onChange={handleInputChange} // Aggiorna il valore del campo
-            style={{ marginBottom: "20px", width: "300px" }}
+            style={{ marginBottom: "20px", width: "300px", marginTop: "20px" }}
           />
           <div>
             <Button variant="contained" onClick={handleSearch} style={{ marginRight: "10px" }}>
@@ -171,12 +171,14 @@ export function UserSchedeDiLavoro() {
               Annulla
             </Button>
           </div>
-
+            </div>
+       
           {loading && <p>Caricamento in corso...</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
 
           {!loading && schede.length === 0 && <p>Nessuna scheda di lavoro trovata.</p>}
 
+        <div className="px-3">
           {!loading && schede.length > 0 && (
             <>
               {schede.map((scheda) => (
@@ -194,8 +196,10 @@ export function UserSchedeDiLavoro() {
                   </Button>
                 </div>
               ))}
+              
             </>
           )}
+        </div>
         </div>
       </motion.div>
     </>

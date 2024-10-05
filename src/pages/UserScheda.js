@@ -51,7 +51,7 @@ export function UserScheda() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <div style={{ marginTop: "110px", marginBottom: "100px" }} className="px-4">
+        <div style={{ marginTop: "70px", marginBottom: "100px" }} className="px-4">
           {loading && <p>Caricamento in corso...</p>} {/* Messaggio di caricamento solo qui */}
           {error && <p style={{ color: "red" }}>{error}</p>} {/* Messaggio di errore */}
 

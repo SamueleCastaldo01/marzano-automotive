@@ -229,3 +229,8 @@ button:active {
   padding-bottom: 10px;
   color: rgb(255, 122, 98);
 }
+
+.mainMobileUser{
+  margin-top: "110px";
+  margin-bottom: "100px";
+}

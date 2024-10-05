@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Importa CircularProgress
 import { NavMobile } from "../components/NavMobile";
+import CarRepairIcon from '@mui/icons-material/CarRepair';
 import { useNavigate } from "react-router-dom";
 
 export function UserVeicoli() {
@@ -78,8 +79,8 @@ export function UserVeicoli() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <div style={{ marginTop: "110px", marginBottom: "100px" }} className="px-4 text-center">
-          <h1>I tuoi Veicoli</h1>
+        <div style={{ marginTop: "70px", marginBottom: "100px" }} className="mainMobileUser px-4 text-center">
+          <h1 className="py-2 rounded rounded-2" style={{ backgroundColor: "#333" }}>I tuoi Veicoli <CarRepairIcon style={{fontSize: "40px"}}/></h1>
 
           {loading && (
             <div style={{ marginTop: "20px" }}>
@@ -93,14 +94,15 @@ export function UserVeicoli() {
             <p>Nessun veicolo trovato per questo utente.</p>
           )}
 
+          <div className="px-3">
           {!loading && veicoli.length > 0 && (
             <>
               {veicoli.map((veicolo) => (
-                <div key={veicolo.id} className="mt-5">
+                <div key={veicolo.id} className="mt-4">
                   <Button
                   onClick={() => {navigate("/userschededilavoro"); localStorage.setItem("userTarga", veicolo.targa)}}
                     className="w-100"
-                    style={{ height: "150px", fontSize: "20px" }}
+                    style={{ height: "100px", fontSize: "15px" }}
                     variant="contained"
                   >
                     Targa: {veicolo.targa} <br />
@@ -110,6 +112,7 @@ export function UserVeicoli() {
               ))}
             </>
           )}
+           </div>
         </div>
       </motion.div>
     </>

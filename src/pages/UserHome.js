@@ -49,6 +49,7 @@ export function UserHome() {
   return (
     <>
      <NavMobile />
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -56,8 +57,11 @@ export function UserHome() {
         className="text-center"
       >
         
-        <div style={{marginTop: "110px"}}>
-        <h2>Benvenuto {nome} {cognome}</h2>
+        <div style={{marginTop: "70px"}}>
+          <div className="px-4">
+            <h1 className="py-2 rounded rounded-2" style={{ backgroundColor: "#333" }}>Benvenuto {nome} {cognome}</h1>
+          </div>
+       
 
         <div className="mt-5 d-flex flex-column gap-5 px-5 align-content-center">
         <Button style={{height: "150px"}} variant="contained" onClick={() => {navigate("/userveicoli")}}>I Tuoi Veicoli</Button>
