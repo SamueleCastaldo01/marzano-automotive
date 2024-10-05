@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Importa CircularProgress
 import { NavMobile } from "../components/NavMobile";
+import { useNavigate } from "react-router-dom";
 
 export function UserVeicoli() {
   const [veicoli, setVeicoli] = useState([]);
   const [loading, setLoading] = useState(true); // Aggiungi stato per il caricamento
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Ottieni l'username dal Redux store
   const username = useSelector((state) => state.userAuth.userDetails?.username);
@@ -96,6 +98,7 @@ export function UserVeicoli() {
               {veicoli.map((veicolo) => (
                 <div key={veicolo.id} className="mt-5">
                   <Button
+                  onClick={() => {navigate("/userschededilavoro"); localStorage.setItem("userTarga", veicolo.targa)}}
                     className="w-100"
                     style={{ height: "150px", fontSize: "20px" }}
                     variant="contained"
