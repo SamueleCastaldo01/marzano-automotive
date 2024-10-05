@@ -12,7 +12,7 @@ export function UserSchedeDiLavoro() {
       >
        
         <div className="text-center" style={{marginTop: "110px"}}>
-        <h2>Schede di lavoro</h2>
+        <h1>Schede di lavoro</h1>
         </div>
       </motion.div>
         

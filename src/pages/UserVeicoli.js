@@ -3,6 +3,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config"; // Assicurati che il percorso sia corretto
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import Button from '@mui/material/Button';
 import { NavMobile } from "../components/NavMobile";
 
 export function UserVeicoli() {
@@ -72,8 +73,8 @@ export function UserVeicoli() {
       transition={{ duration: 0.7 }}
     >
     
-      <div style={{marginTop: "110px"}}>
-        <h1>Veicoli</h1>
+      <div style={{marginTop: "110px", marginBottom: "100px"}} className="px-4 text-center">
+        <h1>I tuoi Veicoli</h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
         {!error && veicoli.length === 0 && (
           <p>Nessun veicolo trovato per questo utente.</p>
@@ -81,11 +82,12 @@ export function UserVeicoli() {
         {veicoli.length > 0 && (
           <ul>
             {veicoli.map((veicolo) => (
-              <li key={veicolo.id}>
-                <p>Marca: {veicolo.marca}</p>
-                <p>Modello: {veicolo.nomeModello}</p>
-                <p>Targa: {veicolo.targa}</p>
-              </li>
+                <>
+                <div key={veicoli.id} className="mt-5">
+                    <Button className="w-100" style={{height: "150px", fontSize: "20px"}} variant="contained">
+                        Targa: {veicolo.targa} <br></br>{veicolo.marca} {veicolo.nomeModello}</Button>
+                </div>
+              </>
             ))}
           </ul>
         )}
