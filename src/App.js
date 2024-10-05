@@ -27,6 +27,7 @@ function App() {
   const matches = useMediaQuery("(max-width:920px)");
   const auth = getAuth();
   const dispatch = useDispatch();
+  const isAuth = useSelector(state => state.auth.isAuth);
 
   useEffect(() => {
     // Monitoraggio dello stato di autenticazione

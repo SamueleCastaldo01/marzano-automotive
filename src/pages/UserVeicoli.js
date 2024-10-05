@@ -80,7 +80,7 @@ export function UserVeicoli() {
           <p>Nessun veicolo trovato per questo utente.</p>
         )}
         {veicoli.length > 0 && (
-          <ul>
+         <>
             {veicoli.map((veicolo) => (
                 <>
                 <div key={veicoli.id} className="mt-5">
@@ -89,7 +89,7 @@ export function UserVeicoli() {
                 </div>
               </>
             ))}
-          </ul>
+        </>
         )}
       </div>
     </motion.div>
