@@ -16,7 +16,9 @@ import { AnimatePresence } from 'framer-motion';
 import moment from 'moment/moment';
 import 'moment/locale/it'
 import { AddCliente } from '../pages/AddCliente';
+import { UserHome } from '../pages/UserHome';
 import { UserVeicoli } from '../pages/UserVeicoli';
+import { UserSchedeDiLavoro } from '../pages/UserSchedeDiLavoro';
 
 
 
@@ -61,6 +63,8 @@ return (
 
     <Route element={<PrivateRoutesUser isAuthUser={isAuthUser}/>}> 
     <Route path="/userveicoli" element={<UserVeicoli />} /> 
+    <Route path="/userschededilavoro" element={<UserSchedeDiLavoro />} /> 
+    <Route path="/userhome" element={<UserHome />} /> 
     </Route>
 
 

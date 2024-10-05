@@ -1,6 +1,6 @@
 import { Outlet, Navigate } from 'react-router-dom'
 import { tutti, dipen, guid, supa } from './utenti';
-import { UserVeicoli } from '../pages/UserVeicoli';
+import { UserHome } from '../pages/UserHome';
 
 
 export function PrivateRoutes({ isAuth, isAuthUser }) {
@@ -11,7 +11,7 @@ export function PrivateRoutes({ isAuth, isAuthUser }) {
     
     // Se l'utente è autenticato ma non è un utente normale, puoi redirigere a un'altra pagina
     if (isAuthUser && !isAuth) {
-        return <UserVeicoli />; // Mostra direttamente il componente per l'utente
+        return <UserHome />; // Mostra direttamente il componente per l'utente
     }
 
     // Se l'utente è autenticato e non è un utente normale, mostra l'Outlet per le rotte protette
