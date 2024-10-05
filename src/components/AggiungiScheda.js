@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Checkbox } from "@mui/material";
 import { db } from "../firebase-config";
+import { motion } from "framer-motion";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useParams } from "react-router-dom";
@@ -221,6 +222,12 @@ const AggiungiScheda = ({  }) => {
   const { cliente, veicolo, telefono, targa } = infoScheda;
 
   return (
+    <>
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.7 }}
+      >
     <div className="mt-4">
       <div className="d-flex align-items-center justify-content-between">
         <TextField
@@ -545,6 +552,8 @@ const AggiungiScheda = ({  }) => {
         </div>
       </div>
     </div>
+    </motion.div>
+    </>
   );
 };
 

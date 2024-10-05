@@ -19,6 +19,7 @@ import { AddCliente } from '../pages/AddCliente';
 import { UserHome } from '../pages/UserHome';
 import { UserVeicoli } from '../pages/UserVeicoli';
 import { UserSchedeDiLavoro } from '../pages/UserSchedeDiLavoro';
+import { UserScheda } from '../pages/UserScheda';
 
 
 
@@ -64,6 +65,7 @@ return (
     <Route element={<PrivateRoutesUser isAuthUser={isAuthUser}/>}> 
     <Route path="/userveicoli" element={<UserVeicoli />} /> 
     <Route path="/userschededilavoro" element={<UserSchedeDiLavoro />} /> 
+    <Route path="/userscheda/:idcustomer/:idscheda" element={<UserScheda />} /> 
     <Route path="/userhome" element={<UserHome />} /> 
     </Route>
 
