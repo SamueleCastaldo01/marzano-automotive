@@ -234,3 +234,17 @@ button:active {
   margin-top: "110px";
   margin-bottom: "100px";
 }
+
+
+.transparentInput .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: gray; /* Colore del bordo */
+}
+
+.transparentInput .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: gray; /* Colore del bordo quando si passa il mouse */
+}
+
+.transparentInput .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: gray; /* Colore del bordo quando è in focus */
+}
+

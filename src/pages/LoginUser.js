@@ -1,7 +1,6 @@
-// LoginUser.js
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, IconButton, InputAdornment } from "@mui/material";
 import { db } from "../firebase-config"; // Assicurati di avere il percorso corretto
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { loginUser } from "../redux/reducers/userAuthSlice";
@@ -10,15 +9,16 @@ import { useNavigate } from "react-router-dom";
 import { logoutU } from "../redux/reducers/authSlice";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { NavMobile } from "../components/NavMobile";
-
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export function LoginUser() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Stato per gestire la visibilità della password
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
-
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -50,45 +50,74 @@ export function LoginUser() {
     }
   };
 
+  // Funzione per alternare la visibilità della password
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <>
-    <NavMobile/>
+      <NavMobile />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <div className="text-center px-5" style={{marginTop: "70px"}}>
-        <h2 className="mt-5">Accedi</h2>
-      <form onSubmit={handleLogin}>
-        <TextField
-          label="Username"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button className="mt-3" style={{height: "50px", width: "100%"}} variant="contained" color="primary" type="submit">
-          Accedi
-        </Button>
-      </form>
-      {message && <Typography variant="body1">{message}</Typography>}
+        <div className="text-center px-5" style={{ marginTop: "70px" }}>
+          <h2 className="mt-5">Accedi</h2>
+          <form onSubmit={handleLogin}>
+            <TextField
+              className="transparentInput"
+              label="Username"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            
+            {/* Campo password con pulsante per mostrare/nascondere */}
+            <TextField
+              label="Password"
+              className="transparentInput"
+              type={showPassword ? "text" : "password"} // Cambia il tipo di input tra 'text' e 'password'
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-      <div style={{marginTop: "100px"}} className=" text-start">
-        <h2>Contattaci</h2>
-        <h6><WhatsAppIcon/> Numero</h6>
-      </div>
-      </div>
+            <Button
+              className="mt-3"
+              style={{ height: "50px", width: "100%" }}
+              variant="contained"
+              color="primary"
+              type="submit"
+            >
+              Accedi
+            </Button>
+          </form>
+          {message && <Typography variant="body1">{message}</Typography>}
+
+          <div style={{ marginTop: "100px" }} className="text-start">
+            <h2>Contattaci</h2>
+            <h6><WhatsAppIcon /> Numero</h6>
+          </div>
+        </div>
       </motion.div>
     </>
   );
