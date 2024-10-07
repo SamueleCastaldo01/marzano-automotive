@@ -104,7 +104,7 @@ return (
           component={Link}
           className="linq"
           value="profilo"
-          to="/profilo"
+          to="userprofile"
           label="Profilo"
           icon={<PersonIcon color={(location.pathname === '/profilo' || location.pathname === '/login') ? '' : 'inherit'} />}
         />

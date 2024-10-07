@@ -20,6 +20,7 @@ import { UserHome } from '../pages/UserHome';
 import { UserVeicoli } from '../pages/UserVeicoli';
 import { UserSchedeDiLavoro } from '../pages/UserSchedeDiLavoro';
 import { UserScheda } from '../pages/UserScheda';
+import { UserProfile } from '../pages/UserProfile';
 
 
 
@@ -67,6 +68,7 @@ return (
     <Route path="/userschededilavoro" element={<UserSchedeDiLavoro />} /> 
     <Route path="/userscheda/:idcustomer/:idscheda" element={<UserScheda />} /> 
     <Route path="/userhome" element={<UserHome />} /> 
+    <Route path="/userprofile" element={<UserProfile />} /> 
     </Route>
 
 
@@ -74,9 +76,6 @@ return (
     <Route path="/loginuser" element={<LoginUser/>} />
     <Route path="/block" element={<Page_per/>} />
     {isAuth ? <Route path="*" element={<Page_per /> }/> :
-              <Route path="*" element={<Login  />}/>    }
-
-    {isAuthUser ? <Route path="*" element={<UserVeicoli /> }/> :
               <Route path="*" element={<Login  />}/>    }
 
 
