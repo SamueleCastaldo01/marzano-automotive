@@ -113,6 +113,7 @@ export function AddSchede() {
         cliente,
         telefono,
         veicolo,
+        chilometraggio: 0,
         dataCreazione: Timestamp.now(),
         dataScheda,
         manodopera, 

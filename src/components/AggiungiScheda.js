@@ -23,6 +23,7 @@ const AggiungiScheda = ({  }) => {
   const [pagato, setPagato] = useState("");
   const [resta, setResta] = useState(0);
   const [sconto, setSconto] = useState("");
+  const [chilometraggio, setChilometraggio] = useState(0);
   const [note, setNote] = useState("");
 
   const fetchData = async () => {
@@ -37,6 +38,7 @@ const AggiungiScheda = ({  }) => {
       setPagato(data.pagato);
       setResta(data.resta || 0);
       setSconto(data.sconto || 0);
+      setChilometraggio(data.chilometraggio ||0);
       setDataScheda(data.dataScheda || []);
       setManodopera(data.manodopera || []);
     } else {
@@ -114,6 +116,16 @@ const AggiungiScheda = ({  }) => {
     const docRef = doc(db, "schedaDiLavoroTab", id);
     await updateDoc(docRef, {
       resto: resto,
+    });
+  };
+
+  const handleChilometraggioChange = async (value) => {
+    const newChilometraggio = value === "" ? "" : value; // Mantieni come stringa
+    setChilometraggio(newChilometraggio);
+  
+    const docRef = doc(db, "schedaDiLavoroTab", id);
+    await updateDoc(docRef, {
+      chilometraggio: newChilometraggio,
     });
   };
 
@@ -258,7 +270,7 @@ const AggiungiScheda = ({  }) => {
           color="tertiary"
         />
         <TextField
-          className="w-100"
+          style={{ width: "75%" }}
           required
           label="Telefono"
           value={telefono || ""}
@@ -267,13 +279,25 @@ const AggiungiScheda = ({  }) => {
           color="tertiary"
         />
         <TextField
-          className="w-100"
+          style={{ width: "75%" }}
           required
           label="Targa"
           value={targa || ""}
           disabled
           variant="outlined"
           color="tertiary"
+        />
+        <TextField
+          className="w-100"
+          required
+          label="Chilometraggio"
+          value={chilometraggio}
+          onChange={(e) => handleChilometraggioChange(e.target.value)}
+          variant="outlined"
+          color="tertiary"
+          InputProps={{
+            endAdornment: <InputAdornment position="end">Km</InputAdornment>,
+          }}
         />
       </div>
 
