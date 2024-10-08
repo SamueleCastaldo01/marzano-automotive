@@ -14,6 +14,15 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
     const [tipoAlimentazione, setTipoAlimentazione] = useState("");
     const [potenza, setPotenza] = useState("");
     const [showOptionalFields, setShowOptionalFields] = useState(false); // Stato per i campi facoltativi
+    const [showScadenzarioFields, setShowScadenzarioFields] = useState(false); // Stato per il Scadenzario
+
+    // Stati per il scadenzario
+    const [revisione, setRevisione] = useState({ dataEffettuata: "", dataScadenza: "" });
+    const [tassaCircolazione, setTassaCircolazione] = useState({ dataEffettuata: "", dataScadenza: "" });
+    const [tagliando, setTagliando] = useState({ dataEffettuata: "", dataScadenza: "" });
+    const [gpl, setGpl] = useState({ dataEffettuata: "", dataScadenza: "" });
+    const [metano, setMetano] = useState({ dataEffettuata: "", dataScadenza: "" });
+    const [assicurazione, setAssicurazione] = useState({ dataEffettuata: "", dataScadenza: "" });
 
     const resetCampi = () => {
         setTarga("");
@@ -23,6 +32,12 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
         setAnnoImmatricolazione("");
         setTipoAlimentazione("");
         setPotenza("");
+        setRevisione({ dataEffettuata: "", dataScadenza: "" });
+        setTassaCircolazione({ dataEffettuata: "", dataScadenza: "" });
+        setTagliando({ dataEffettuata: "", dataScadenza: "" });
+        setGpl({ dataEffettuata: "", dataScadenza: "" });
+        setMetano({ dataEffettuata: "", dataScadenza: "" });
+        setAssicurazione({ dataEffettuata: "", dataScadenza: "" });
     };
 
     const isTargaUnique = async (targa) => {
@@ -54,6 +69,14 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                 annoImmatricolazione: annoImmatricolazione || null,
                 tipoAlimentazione: tipoAlimentazione || null,
                 potenza: potenza || null,
+                scadenzario: {
+                    revisione,
+                    tassaCircolazione,
+                    tagliando,
+                    gpl,
+                    metano,
+                    assicurazione
+                }
             });
             successNoty("Veicolo aggiunto con successo");
             fetchVehicles();
@@ -71,6 +94,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
             <DialogContent style={{ backgroundColor: "#1E1E1E" }}>
                 <div className="container-fluid">
                     <form>
+                        {/* Campi obbligatori */}
                         <div className="row">
                             <div className="col-lg-6 col-md-6 col-sm-12 mt-4">
                                 <TextField
@@ -105,6 +129,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                     onChange={(e) => setNomeModello(e.target.value)}
                                 />
                             </div>
+
                             {/* Sezione Campi Facoltativi */}
                             <div className="col-lg-12 mt-4">
                                 <Typography
@@ -113,12 +138,13 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                     style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                                 >
                                     Campi Facoltativi
-                                    {showOptionalFields ?
-                                        <ExpandMoreIcon style={{ marginLeft: '8px', transform: 'rotate(180deg)' }} /> :
+                                    {showOptionalFields ? 
+                                        <ExpandMoreIcon style={{ marginLeft: '8px', transform: 'rotate(180deg)' }} /> : 
                                         <ExpandMoreIcon style={{ marginLeft: '8px' }} />
                                     }
                                 </Typography>
                                 <Collapse in={showOptionalFields}>
+                                    {/* Contenuto Campi Facoltativi */}
                                     <div className="row">
                                         <div className="col-lg-6 col-md-6 col-sm-12 mt-4">
                                             <TextField
@@ -166,6 +192,174 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 type="number"
                                                 value={potenza}
                                                 onChange={(e) => setPotenza(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                </Collapse>
+                            </div>
+
+                            {/* Sezione Scadenzario */}
+                            <div className="col-lg-12 mt-4">
+                                <Typography
+                                    variant="h6"
+                                    onClick={() => setShowScadenzarioFields(!showScadenzarioFields)}
+                                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                >
+                                    Scadenzario
+                                    {showScadenzarioFields ? 
+                                        <ExpandMoreIcon style={{ marginLeft: '8px', transform: 'rotate(180deg)' }} /> : 
+                                        <ExpandMoreIcon style={{ marginLeft: '8px' }} />
+                                    }
+                                </Typography>
+                                <Collapse in={showScadenzarioFields}>
+                                    <div className="row">
+                                        {/* Revisione */}
+                                        <h6 style={{backgroundColor: "#224072"}} className="mt-4 py-1">Revisione</h6>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Revisione - Data Effettuata"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={revisione.dataEffettuata}
+                                                onChange={(e) => setRevisione({ ...revisione, dataEffettuata: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Revisione - Data Scadenza"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={revisione.dataScadenza}
+                                                onChange={(e) => setRevisione({ ...revisione, dataScadenza: e.target.value })}
+                                            />
+                                        </div>
+
+                                        {/* Tassa di Circolazione */}
+                                        <h6 style={{backgroundColor: "#224072"}} className="mt-4 py-1">Tassa di Circolazione</h6>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Tassa di Circolazione - Data Effettuata"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={tassaCircolazione.dataEffettuata}
+                                                onChange={(e) => setTassaCircolazione({ ...tassaCircolazione, dataEffettuata: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Tassa di Circolazione - Data Scadenza"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={tassaCircolazione.dataScadenza}
+                                                onChange={(e) => setTassaCircolazione({ ...tassaCircolazione, dataScadenza: e.target.value })}
+                                            />
+                                        </div>
+
+                                        {/* Tagliando */}
+                                        <h6 style={{backgroundColor: "#224072"}} className="mt-4 py-1">Tagliando</h6>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Tagliando - Data Effettuata"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={tagliando.dataEffettuata}
+                                                onChange={(e) => setTagliando({ ...tagliando, dataEffettuata: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Tagliando - Data Scadenza"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={tagliando.dataScadenza}
+                                                onChange={(e) => setTagliando({ ...tagliando, dataScadenza: e.target.value })}
+                                            />
+                                        </div>
+
+                                        {/* Serbatoio GPL */}
+                                        <h6 style={{backgroundColor: "#224072"}} className="mt-4 py-1">Serbatoio GPL</h6>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Serbatoio GPL - Data Effettuata"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={gpl.dataEffettuata}
+                                                onChange={(e) => setGpl({ ...gpl, dataEffettuata: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Serbatoio GPL - Data Scadenza"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={gpl.dataScadenza}
+                                                onChange={(e) => setGpl({ ...gpl, dataScadenza: e.target.value })}
+                                            />
+                                        </div>
+
+                                        {/* Bombola Metano */}
+                                        <h6 style={{backgroundColor: "#224072"}} className="mt-4 py-1">Bombola Metano</h6>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Bombola Metano - Data Effettuata"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={metano.dataEffettuata}
+                                                onChange={(e) => setMetano({ ...metano, dataEffettuata: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Bombola Metano - Data Scadenza"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={metano.dataScadenza}
+                                                onChange={(e) => setMetano({ ...metano, dataScadenza: e.target.value })}
+                                            />
+                                        </div>
+
+                                        {/* Assicurazione */}
+                                        <h6 style={{backgroundColor: "#224072"}} className="mt-4 py-1">Assicurazione</h6>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Assicurazione - Data Effettuata"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={assicurazione.dataEffettuata}
+                                                onChange={(e) => setAssicurazione({ ...assicurazione, dataEffettuata: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                            <TextField
+                                                label="Assicurazione - Data Scadenza"
+                                                type="date"
+                                                variant="outlined"
+                                                className="w-100"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={assicurazione.dataScadenza}
+                                                onChange={(e) => setAssicurazione({ ...assicurazione, dataScadenza: e.target.value })}
                                             />
                                         </div>
                                     </div>
