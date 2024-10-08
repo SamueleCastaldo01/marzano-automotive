@@ -42,7 +42,12 @@ function Homepage ()  {
         animate= {{opacity: 1}}
         transition={{ duration: 0.7 }}>
       <div>
-        <h1>Ciao sono entrato</h1>
+        <h1>Dashboard Marzano Automotive</h1>
+        <div className='mt-5 d-flex flex-column gap-3 justify-content-start'>
+           <Button style={{width: "200px", height: "70px"}} variant="contained" onClick={()=> {navigate("/customerlist")}}>Clienti</Button>
+           <Button style={{width: "200px", height: "70px"}} variant="contained" onClick={()=> {navigate("/schededilavoro")}}>Schede</Button>
+        </div>
+      
       </div>
 
       </motion.div>
