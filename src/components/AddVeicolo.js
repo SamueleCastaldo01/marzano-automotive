@@ -1,4 +1,6 @@
 import { useState } from "react";
+import moment from 'moment';
+import 'moment/locale/it'; 
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, MenuItem, Select, FormControl, InputLabel, Button, Collapse, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // Importa l'icona
 import { db } from "../firebase-config";
@@ -45,6 +47,55 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
         const querySnapshot = await getDocs(q);
         return querySnapshot.empty; // Restituisce true se la targa è unica
     };
+
+    const handleCalcoloScadenzaRevisione = () => {
+        if (revisione.dataEffettuata) {
+            const dataEffettuata = moment(revisione.dataEffettuata);
+            const dataScadenza = dataEffettuata.add(2, 'years').format('YYYY-MM-DD'); // Formato della data
+
+            setRevisione({ ...revisione, dataScadenza });
+        }
+    }
+
+    const handleCalcoloScadenzaTassaDiCircolazione = () => {
+        if (tassaCircolazione.dataEffettuata) {
+            const dataEffettuata = moment(tassaCircolazione.dataEffettuata);
+            const dataScadenza = dataEffettuata.add(1, 'years').add(1, 'months').format('YYYY-MM-DD'); // Formato della data
+            setTassaCircolazione({ ...tassaCircolazione, dataScadenza });
+        }
+    }
+
+    const handleCalcoloScadenzaTagliando = () => {
+        if (tagliando.dataEffettuata) {
+            const dataEffettuata = moment(tagliando.dataEffettuata);
+            const dataScadenza = dataEffettuata.add(2, 'years').format('YYYY-MM-DD'); // Formato della data
+            setTagliando({ ...tagliando, dataScadenza });
+        }
+    }
+
+    const handleCalcoloScadenzaGpl = () => {
+        if (gpl.dataEffettuata) {
+            const dataEffettuata = moment(gpl.dataEffettuata);
+            const dataScadenza = dataEffettuata.add(10, 'years').format('YYYY-MM-DD'); // Formato della data
+            setGpl({ ...gpl, dataScadenza });
+        }
+    }
+
+    const handleCalcoloScadenzaMetano = () => {
+        if (metano.dataEffettuata) {
+            const dataEffettuata = moment(metano.dataEffettuata);
+            const dataScadenza = dataEffettuata.add(20, 'years').format('YYYY-MM-DD'); // Formato della data
+            setMetano({ ...metano, dataScadenza });
+        }
+    }
+
+    const handleCalcoloScadenzaAssicurazione = () => {
+        if (assicurazione.dataEffettuata) {
+            const dataEffettuata = moment(assicurazione.dataEffettuata);
+            const dataScadenza = dataEffettuata.add(1, 'years').format('YYYY-MM-DD'); // Formato della data
+            setAssicurazione({ ...assicurazione, dataScadenza });
+        }
+    }
 
     const handleAddVehicle = async () => {
         if (!targa || !marca || !nomeModello) {
@@ -226,7 +277,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 onChange={(e) => setRevisione({ ...revisione, dataEffettuata: e.target.value })}
                                             />
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center gap-2">
                                             <TextField
                                                 label="Revisione - Data Scadenza"
                                                 type="date"
@@ -236,6 +287,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 value={revisione.dataScadenza}
                                                 onChange={(e) => setRevisione({ ...revisione, dataScadenza: e.target.value })}
                                             />
+                                            <Button onClick={() => {handleCalcoloScadenzaRevisione()}} variant="contained">Calcola </Button>
                                         </div>
 
                                         {/* Tassa di Circolazione */}
@@ -251,7 +303,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 onChange={(e) => setTassaCircolazione({ ...tassaCircolazione, dataEffettuata: e.target.value })}
                                             />
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center gap-2">
                                             <TextField
                                                 label="Tassa di Circolazione - Data Scadenza"
                                                 type="date"
@@ -261,6 +313,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 value={tassaCircolazione.dataScadenza}
                                                 onChange={(e) => setTassaCircolazione({ ...tassaCircolazione, dataScadenza: e.target.value })}
                                             />
+                                            <Button onClick={() => {handleCalcoloScadenzaTassaDiCircolazione()}} variant="contained">Calcola </Button>
                                         </div>
 
                                         {/* Tagliando */}
@@ -276,7 +329,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 onChange={(e) => setTagliando({ ...tagliando, dataEffettuata: e.target.value })}
                                             />
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center gap-2">
                                             <TextField
                                                 label="Tagliando - Data Scadenza"
                                                 type="date"
@@ -286,6 +339,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 value={tagliando.dataScadenza}
                                                 onChange={(e) => setTagliando({ ...tagliando, dataScadenza: e.target.value })}
                                             />
+                                             <Button onClick={() => {handleCalcoloScadenzaTagliando()}} variant="contained">Calcola </Button>
                                         </div>
 
                                         {/* Serbatoio GPL */}
@@ -301,7 +355,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 onChange={(e) => setGpl({ ...gpl, dataEffettuata: e.target.value })}
                                             />
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center gap-2">
                                             <TextField
                                                 label="Serbatoio GPL - Data Scadenza"
                                                 type="date"
@@ -311,11 +365,12 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 value={gpl.dataScadenza}
                                                 onChange={(e) => setGpl({ ...gpl, dataScadenza: e.target.value })}
                                             />
+                                              <Button onClick={() => {handleCalcoloScadenzaGpl()}} variant="contained">Calcola </Button>
                                         </div>
 
                                         {/* Bombola Metano */}
                                         <h6 style={{backgroundColor: "#224072"}} className="mt-4 py-1">Bombola Metano</h6>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 ">
                                             <TextField
                                                 label="Bombola Metano - Data Effettuata"
                                                 type="date"
@@ -326,7 +381,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 onChange={(e) => setMetano({ ...metano, dataEffettuata: e.target.value })}
                                             />
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center gap-2">
                                             <TextField
                                                 label="Bombola Metano - Data Scadenza"
                                                 type="date"
@@ -336,6 +391,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 value={metano.dataScadenza}
                                                 onChange={(e) => setMetano({ ...metano, dataScadenza: e.target.value })}
                                             />
+                                            <Button onClick={() => {handleCalcoloScadenzaMetano()}} variant="contained">Calcola </Button>
                                         </div>
 
                                         {/* Assicurazione */}
@@ -351,7 +407,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 onChange={(e) => setAssicurazione({ ...assicurazione, dataEffettuata: e.target.value })}
                                             />
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center gap-2">
                                             <TextField
                                                 label="Assicurazione - Data Scadenza"
                                                 type="date"
@@ -361,6 +417,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
                                                 value={assicurazione.dataScadenza}
                                                 onChange={(e) => setAssicurazione({ ...assicurazione, dataScadenza: e.target.value })}
                                             />
+                                            <Button onClick={() => {handleCalcoloScadenzaAssicurazione()}} variant="contained">Calcola </Button>
                                         </div>
                                     </div>
                                 </Collapse>
