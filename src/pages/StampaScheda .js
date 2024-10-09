@@ -68,67 +68,88 @@ export function StampaScheda() {
                     />
 
                     <div className="stampa px-5" ref={ref}>
-                        <h1 className="mt-2">Preventivo</h1>
+                        <h1 className="mt-5">Preventivo</h1>
 
-                        <div>
-                            <p><strong>Cliente:</strong> {cliente}</p>
-                            <p><strong>Data Creazione:</strong> {moment().format("DD/MM/YYYY")}</p>
-                            <p><strong>Veicolo:</strong> {infoScheda.veicolo}</p>
-                            <p><strong>Targa:</strong> {infoScheda.targa}</p>
-                            <p><strong>Chilometraggio:</strong> {chilometraggio} km</p>
+                        <div className="ps-3">
+                            <div className="d-flex gap-3">
+                                <p className="mb-0"><strong>Data:</strong> {moment().format("DD/MM/YYYY")}</p>
+                                <p className="mb-0"><strong>Cliente:</strong> {cliente}</p>
+                            </div>
+                           
+                            <div className="d-flex gap-3 mt-1">
+                                <p className="mb-0"><strong>Veicolo:</strong> {infoScheda.veicolo}</p>
+                                <p className="mb-0"><strong>Targa:</strong> {infoScheda.targa}</p>
+                                <p className="mb-0"><strong>Chilometraggio:</strong> {chilometraggio} km</p>
+                            </div>
+                          
                         </div>
 
-                        <h2>Dettagli Scheda</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Descrizione</th>
-                                    <th>Prezzo</th>
-                                    <th>Qt</th>
-                                    <th>Sconto</th>
-                                    <th>Totale</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {dataScheda.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.descrizione || ""}</td>
-                                        <td>{item.prezzo || ""}</td>
-                                        <td>{item.qt || "1"}</td>
-                                        <td>{item.sconto || "0"}</td>
-                                        <td>{item.totale || ""}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        <h2 className="mt-4">Dettagli Scheda</h2>
+                        <div className="ps-4">
+                            <div className="row">
+                                <div className="col-6 border border-1 border-black ps-1" style={{width: "380px"}}>
+                                <strong>Descrizione</strong>
+                                </div>
+                                <div className="col-1 border border-1 border-black ps-1" style={{width: "70px"}}>
+                                <strong>Prezzo</strong>
+                                </div>
+                                <div className="col-1 border border-1 border-black ps-1" style={{width: "40px"}}>
+                                <strong>Qt</strong>
+                                </div>
+                                <div className="col-2 border border-1 border-black ps-1" style={{width: "90px"}}>
+                                <strong>Sconto</strong>
+                                </div>
+                                <div className="col-2 border border-1 border-black ps-1">
+                                <strong>Totale</strong>
+                                </div>
+                            </div>
+                            {dataScheda.map((item, index) => (
+                                 <div className="row" key={index}>
+                                 <div className="col-6 border border-1 border-top-0 border-black ps-1" style={{width: "380px"}}>
+                                 {item.descrizione || ""}
+                                 </div>
+                                 <div className="col-1 border border-1 border-top-0 border-black ps-1" style={{width: "70px"}}>
+                                 {item.prezzo || "0"}€
+                                 </div>
+                                 <div className="col-1 border border-1 border-top-0 border-black ps-1" style={{width: "40px"}}>
+                                 {item.qt || "1"}
+                                 </div>
+                                 <div className="col-2 border border-1 border-top-0 border-black ps-1" style={{width: "90px"}}>
+                                 {item.sconto || "0"} %
+                                 </div>
+                                 <div className="col-2 border border-1 border-top-0 border-black ps-1">
+                                 {item.totale || ""}€
+                                 </div>
+                             </div>
+                            ))}
+                            {manodopera.map((item, index) => (
+                                 <div className="row" key={index}>
+                                 <div className="col-6 border border-1 border-top-0 border-black ps-1" style={{width: "380px"}}>
+                                 manodopera
+                                 </div>
+                                 <div className="col-1 border border-1 border-top-0 border-black ps-1" style={{width: "70px"}}>
+                                 {item.prezzo || "0"}€
+                                 </div>
+                                 <div className="col-1 border border-1 border-top-0 border-black ps-1" style={{width: "40px"}}>
+                                 {item.qt || "1"}
+                                 </div>
+                                 <div className="col-2 border border-1 border-top-0 border-black ps-1" style={{width: "90px"}}>
+                                 {item.sconto || "0"} %
+                                 </div>
+                                 <div className="col-2 border border-1 border-top-0 border-black ps-1">
+                                 {item.totale || "0.00"}€
+                                 </div>
+                             </div>
+                            ))}
+                           
+                        </div>
 
-                        <h2>Manodopera</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Prezzo</th>
-                                    <th>Qt</th>
-                                    <th>Sconto</th>
-                                    <th>Totale</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {manodopera.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.prezzo || ""}</td>
-                                        <td>{item.qt || ""}</td>
-                                        <td>{item.sconto || ""}</td>
-                                        <td>{item.totale || ""}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
 
-                        <div>
-                            <p><strong> Totale:</strong> {totale}</p>
-                            <p><strong> Pagato:</strong> {pagato}</p>
-                            <p><strong>Resto:</strong> {resta}</p>
-                            <p><strong>Sconto:</strong> {sconto}</p>
+                        <div className="mt-4 d-flex flex-column align-items-end ">
+                            <p className="mb-0"><strong> Totale:</strong> {totale}€</p>
+                            <p className="mb-0"><strong> Pagato:</strong> {pagato}€</p>
+                            <p className="mb-0"><strong>Sconto:</strong> {sconto}€</p>
+                            <p className="mb-0"><strong>Resto:</strong> {resta}€</p>
                         </div>
                     </div>
                 </div>
