@@ -186,13 +186,14 @@ export function UserSchedeDiLavoro() {
                   <Button
                     variant="contained"
                     className="w-100"
-                    style={{ height: "100px", fontSize: "16px" }}
+                    style={{ height: "120px", fontSize: "16px" }}
                     onClick={() => { navigate("/userscheda/" + customerId + "/" + scheda.id); }} // Naviga alla scheda
                   >
                     {/* Converte la data usando moment */}
                     Data: {moment(scheda.dataCreazione.toDate()).format("DD/MM/YYYY")} <br />
                     Targa: {scheda.targa.toUpperCase()} <br /> {/* Mostra la targa in maiuscolo */}
-                    Veicolo: {scheda.veicolo}
+                    Veicolo: {scheda.veicolo} <br />
+                    Chilometraggio : {scheda.chilometraggio} Km
                   </Button>
                 </div>
               ))}

@@ -45,7 +45,7 @@ const EditVeicolo = ({ open, onClose, vehicleId, fetchVehicles }) => {
     const handleCalcoloScadenzaTagliando = () => {
         if (tagliando.dataEffettuata) {
             const dataEffettuata = moment(tagliando.dataEffettuata);
-            const dataScadenza = dataEffettuata.add(2, 'years').format('YYYY-MM-DD'); // Formato della data
+            const dataScadenza = dataEffettuata.add(1, 'years').format('YYYY-MM-DD'); // Formato della data
             setTagliando({ ...tagliando, dataScadenza });
         }
     }
@@ -61,7 +61,7 @@ const EditVeicolo = ({ open, onClose, vehicleId, fetchVehicles }) => {
     const handleCalcoloScadenzaMetano = () => {
         if (metano.dataEffettuata) {
             const dataEffettuata = moment(metano.dataEffettuata);
-            const dataScadenza = dataEffettuata.add(20, 'years').format('YYYY-MM-DD'); // Formato della data
+            const dataScadenza = dataEffettuata.add(4, 'years').format('YYYY-MM-DD'); // Formato della data
             setMetano({ ...metano, dataScadenza });
         }
     }
@@ -412,7 +412,6 @@ const EditVeicolo = ({ open, onClose, vehicleId, fetchVehicles }) => {
                                             />
                                             <Button onClick={() => {handleCalcoloScadenzaAssicurazione()}} variant="contained">Calcola </Button>
                                         </div>
-                                        {/* Continua con GPL, Metano, Assicurazione */}
                                     </div>
                                 </Collapse>
                             </div>

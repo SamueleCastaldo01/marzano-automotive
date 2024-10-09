@@ -15,7 +15,7 @@ export function AddCliente() {
     const navigate = useNavigate();
     const [gender, setGender] = useState('');
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('12345678');
     const [nome, setNome] = useState('');
     const [cognome, setCognome] = useState('');
     const [dataNascita, setDataNascita] = useState('');

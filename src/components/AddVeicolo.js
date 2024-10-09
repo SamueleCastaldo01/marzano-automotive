@@ -68,7 +68,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
     const handleCalcoloScadenzaTagliando = () => {
         if (tagliando.dataEffettuata) {
             const dataEffettuata = moment(tagliando.dataEffettuata);
-            const dataScadenza = dataEffettuata.add(2, 'years').format('YYYY-MM-DD'); // Formato della data
+            const dataScadenza = dataEffettuata.add(1, 'years').format('YYYY-MM-DD'); // Formato della data
             setTagliando({ ...tagliando, dataScadenza });
         }
     }
@@ -84,7 +84,7 @@ const AddVeicolo = ({ open, onClose, idCustomer, fetchVehicles, username, onTarg
     const handleCalcoloScadenzaMetano = () => {
         if (metano.dataEffettuata) {
             const dataEffettuata = moment(metano.dataEffettuata);
-            const dataScadenza = dataEffettuata.add(20, 'years').format('YYYY-MM-DD'); // Formato della data
+            const dataScadenza = dataEffettuata.add(4, 'years').format('YYYY-MM-DD'); // Formato della data
             setMetano({ ...metano, dataScadenza });
         }
     }

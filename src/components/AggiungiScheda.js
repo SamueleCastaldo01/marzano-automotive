@@ -4,10 +4,10 @@ import { db } from "../firebase-config";
 import { motion } from "framer-motion";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import InputAdornment from "@mui/material/InputAdornment";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AggiungiScheda = ({  }) => {
-    const { id } = useParams();
+  const { id } = useParams();
   const [dataScheda, setDataScheda] = useState([]);
   const [manodopera, setManodopera] = useState([
     {
@@ -25,6 +25,7 @@ const AggiungiScheda = ({  }) => {
   const [sconto, setSconto] = useState("");
   const [chilometraggio, setChilometraggio] = useState(0);
   const [note, setNote] = useState("");
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     if (!id) return;
@@ -318,6 +319,13 @@ const AggiungiScheda = ({  }) => {
         >
           Elimina {selectedItems.length > 0 && `(${selectedItems.length})`}
         </Button>
+        <Button
+          className="me-2"
+          variant="contained"
+          onClick={() => {window.open("/stampascheda/" +id, '_blank')}}
+        >
+          Stampa
+        </Button>
         <div>
           <h6
             className="p-3 rounded-5 mb-0"
@@ -577,6 +585,7 @@ const AggiungiScheda = ({  }) => {
       </div>
     </div>
     </motion.div>
+
     </>
   );
 };

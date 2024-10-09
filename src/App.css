@@ -248,3 +248,14 @@ button:active {
   border-color: gray; /* Colore del bordo quando è in focus */
 }
 
+@media print {
+  .stampa {
+      color: black !important; /* Imposta il colore del testo a nero per la stampa */
+      background: white; /* Imposta il colore di sfondo a bianco per la stampa */
+  }
+
+  /* Nascondi il pulsante quando si stampa */
+  .btn {
+      display: none;
+  }
+}

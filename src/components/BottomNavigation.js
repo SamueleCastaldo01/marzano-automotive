@@ -37,7 +37,8 @@ function BottomNavi ()  {
   
 
 return (
-
+  <>
+{(isAuth || isAuthUser) && 
 <Paper 
   sx={{ 
     position: 'fixed', 
@@ -123,7 +124,8 @@ return (
   </BottomNavigation>
 </Paper>
 
-
+}
+</>
     )
 
 }

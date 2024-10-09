@@ -21,6 +21,7 @@ import { UserVeicoli } from '../pages/UserVeicoli';
 import { UserSchedeDiLavoro } from '../pages/UserSchedeDiLavoro';
 import { UserScheda } from '../pages/UserScheda';
 import { UserProfile } from '../pages/UserProfile';
+import { StampaScheda } from '../pages/StampaScheda ';
 
 
 
@@ -58,7 +59,7 @@ return (
     <Route path="/schededilavoro" element={<SchedeDiLavoro />} /> 
     <Route path="/aggiungischeda" element={<AddSchede />} /> 
     <Route path="/aggiungischeda1/:id" element={<AggiungiScheda />} /> 
-
+    <Route path="/stampascheda/:id" element={<StampaScheda />} /> 
     
     </Route>
     </Route>
