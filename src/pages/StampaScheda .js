@@ -145,9 +145,9 @@ export function StampaScheda() {
                         </div>
                         
                         <div className="d-flex justify-content-between mt-4">
-                            <div>
+                            <div className="ps-2">
                                 <img style={{width:"100px", height: "100px"}} src="/frame.png"/>
-                                <p className="ps-2">Usa la nostra app!</p>
+                                <p className="">Usa la nostra app!</p>
                             </div>
 
                             <div className="row">
