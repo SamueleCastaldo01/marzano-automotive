@@ -22,8 +22,10 @@ import {
   DialogContentText,
   DialogTitle,
   Snackbar,
+  IconButton,
   TextField, // Importa TextField per l'input
 } from "@mui/material";
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { StyledDataGrid, theme } from "../components/StyledDataGrid";
 import { ThemeProvider } from "@mui/material/styles";
 import { itIT } from "@mui/x-data-grid/locales";
@@ -188,9 +190,9 @@ export function SchedeDiLavoro() {
             <h2 className="mb-0">Schede di Lavoro</h2>
           </div>
 
-          <div className="d-flex align-items-center justify-content-between">
+          <div className="d-flex align-items-center justify-content-between mt-4">
             <form
-              className="d-flex align-items-center mt-4"
+              className="d-flex align-items-center"
               onSubmit={handleSearch}
             >
               <TextField
@@ -210,6 +212,9 @@ export function SchedeDiLavoro() {
               </Button>
             </form>
             <div className="d-flex align-items-center">
+            <IconButton variant="contained" onClick={() => {fetchWorkCards()}}>
+              <RefreshIcon/>
+            </IconButton>
               <Button
                 className="me-2"
                 color="primary"

@@ -18,6 +18,7 @@ export function AddSchede() {
   
   const [idCust, setIdCust] = useState("");
   const [cliente, setCliente] = useState("");
+  const [username, setUsername] = useState("");
   const [telefono, setTelefono] = useState("");
   const [veicolo, setVeicolo] = useState("");
   const [idScheda, setIdScheda] = useState("");
@@ -54,8 +55,9 @@ export function AddSchede() {
   
         if (customerDoc.exists()) {
           const customerData = customerDoc.data();
-          setCliente(customerData.username);
+          setUsername(customerData.username);
           setTelefono(customerData.telefono);
+          setCliente(customerData.nome + " " + customerData.cognome)
         } else {
           setCliente("Cliente non trovato");
           setTelefono("");
@@ -110,6 +112,7 @@ export function AddSchede() {
       const nuovaScheda = {
         idCustomer: idCust,
         targa,
+        username,
         cliente,
         telefono,
         veicolo,

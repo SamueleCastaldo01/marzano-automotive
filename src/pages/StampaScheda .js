@@ -143,14 +143,31 @@ export function StampaScheda() {
                             ))}
                            
                         </div>
+                        
+                        <div className="d-flex justify-content-between mt-4">
+                            <div>
+                                <img style={{width:"100px", height: "100px"}} src="/frame.png"/>
+                                <p className="ps-2">Usa la nostra app!</p>
+                            </div>
 
-
-                        <div className="mt-4 d-flex flex-column align-items-end ">
-                            <p className="mb-0"><strong> Totale:</strong> {totale}€</p>
-                            <p className="mb-0"><strong> Pagato:</strong> {pagato}€</p>
-                            <p className="mb-0"><strong>Sconto:</strong> {sconto}€</p>
-                            <p className="mb-0"><strong>Resto:</strong> {resta}€</p>
+                            <div className="row">
+                                <div className="col-8">
+                                <p className="mb-0"><strong> Totale:</strong></p>
+                                <p className="mb-0"><strong> Pagato:</strong></p>
+                                <p className="mb-0"><strong>Sconto:</strong></p>
+                                <p className="mb-0"><strong>Resto:</strong></p>
+                                </div>
+                                <div className="col-4">
+                                <p className="mb-0">{totale}€</p>
+                                <p className="mb-0">{pagato}€</p>
+                                <p className="mb-0">{sconto}€</p>
+                                <p className="mb-0">{resta}€</p>
+                                </div>
+                       
+                            </div>
                         </div>
+
+              
                     </div>
                 </div>
             </motion.div>

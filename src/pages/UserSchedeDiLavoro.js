@@ -193,7 +193,7 @@ export function UserSchedeDiLavoro() {
                     Data: {moment(scheda.dataCreazione.toDate()).format("DD/MM/YYYY")} <br />
                     Targa: {scheda.targa.toUpperCase()} <br /> {/* Mostra la targa in maiuscolo */}
                     Veicolo: {scheda.veicolo} <br />
-                    Chilometraggio : {scheda.chilometraggio} Km
+                    Km : {scheda.chilometraggio} Km
                   </Button>
                 </div>
               ))}

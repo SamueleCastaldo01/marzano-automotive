@@ -117,6 +117,10 @@ export function LoginUser() {
             <h2>Contattaci</h2>
             <h6><WhatsAppIcon /> Numero</h6>
           </div>
+
+          <div className="text-start" style={{marginTop: "100px"}}>
+            <a href="/login">Accedi come supervisore</a>
+          </div>
         </div>
       </motion.div>
     </>
