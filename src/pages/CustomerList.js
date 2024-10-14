@@ -308,13 +308,13 @@ export function CustomerList() {
       <div className="container-fluid">
         <h2>Anagrafica Clienti</h2>
         <div className='d-flex justify-content-between align-items-center mt-4'>
-          <div className='d-flex align-items-center gap-2'>
-            <p  className='mb-0'><strong>Ricerca per:</strong></p>
+          <div className='d-flex flex-column  gap-2'>
             <div className='d-flex align-items-center gap-2'>
-            {searchType != "telefono" &&<p className='pSearch' onClick={() => {setSearhType("telefono")}}>Telefono</p>}
-            {searchType != "targa" &&<p className='pSearch' onClick={() => {setSearhType("targa")}}>Targa</p>}
-            {searchType != "nome" && <p className='pSearch' onClick={() => {setSearhType("nome")}}>Nome</p> }
-            {searchType != "cognome" && <p className='pSearch' onClick={() => {setSearhType("cognome")}}>Cognome</p>}
+              <p className='mb-0'><strong>Ricerca per:</strong></p>
+              <p className='pSearch' onClick={() => {setSearhType("nome")}}>Nome</p> 
+              <p className='pSearch' onClick={() => {setSearhType("cognome")}}>Cognome</p>
+              <p className='pSearch' onClick={() => {setSearhType("telefono")}}>Telefono</p>
+              <p className='pSearch' onClick={() => {setSearhType("targa")}}>Targa</p>
             </div>
           {searchType == "telefono" &&
           <form className="d-flex align-items-center" onSubmit={handleSearch}>
