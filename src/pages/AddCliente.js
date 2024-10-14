@@ -148,7 +148,7 @@ export function AddCliente() {
                 <form onSubmit={handleSubmit}>
                     <div className='row'>
                         <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' required label="Username" variant="outlined" color='tertiary' value={username} onChange={(e) => setUsername(e.target.value)} />
+                            <TextField className='w-100' required label="Username" variant="outlined" color='tertiary' value={username} onChange={(e) => setUsername(e.target.value.toLowerCase())} />
                         </div>
                         <div className='d-flex mt-4 col-lg-4 col-md-6 col-sm-12'>
                             <TextField className='w-100' required label="Password" variant="outlined" color='tertiary' value={password} onChange={(e) => setPassword(e.target.value)} />

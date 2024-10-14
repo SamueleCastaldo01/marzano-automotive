@@ -289,7 +289,7 @@ export function CustomerList() {
               variant="outlined"
               className="me-2"
               value={searchTarga}
-              onChange={(e) => setSearchTarga(e.target.value)} // Aggiorna lo stato con il valore inserito
+              onChange={(e) => setSearchTarga(e.target.value.toUpperCase())} // Aggiorna lo stato con il valore inserito
             />
             <Button
               className="me-2"

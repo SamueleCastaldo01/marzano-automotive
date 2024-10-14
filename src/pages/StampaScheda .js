@@ -11,6 +11,7 @@ export function StampaScheda() {
     const ref = useRef();
     const [infoScheda, setInfoScheda] = useState({});
     const [cliente, setCliente] = useState("");
+    const [username, setUsername] = useState("");
     const [dataScheda, setDataScheda] = useState([]);
     const [pagato, setPagato] = useState("");
     const [resta, setResta] = useState(0);
@@ -38,6 +39,7 @@ export function StampaScheda() {
             setPagato(data.pagato);
             
             setCliente(data.cliente);
+            setUsername(data.username)
             setResta(data.resto || 0);
             setSconto(data.sconto || 0);
             setTotale(data.totale || 0);
@@ -74,6 +76,7 @@ export function StampaScheda() {
                             <div className="d-flex gap-3">
                                 <p className="mb-0"><strong>Data:</strong> {moment().format("DD/MM/YYYY")}</p>
                                 <p className="mb-0"><strong>Cliente:</strong> {cliente}</p>
+                                <p className="mb-0"><strong>Username:</strong> {username}</p>
                             </div>
                            
                             <div className="d-flex gap-3 mt-1">
