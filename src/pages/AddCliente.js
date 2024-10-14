@@ -44,6 +44,14 @@ export function AddCliente() {
         setEmail("");
     };
 
+    const capitalizeWords = (str) => {
+        return str
+          .toLowerCase() // Converte l'intera stringa in minuscolo
+          .split(' ') // Divide la stringa in parole
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalizza la prima lettera di ogni parola
+          .join(' '); // Riunisce le parole in una stringa
+      };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const usernameExists = await checkUsernameExists(username);
@@ -158,10 +166,18 @@ export function AddCliente() {
                             <TextField className='w-100' type='number' required label="Numero di Telefono" variant="outlined" color='tertiary' value={telefono} onChange={(e) => setTelefono(e.target.value)} />
                         </div>
                         <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' required label="Nome" variant="outlined" color='tertiary' value={nome} onChange={(e) => setNome(e.target.value)} />
+                            <TextField className='w-100' required label="Nome" variant="outlined" color='tertiary' value={nome}   
+                                onChange={(e) => {
+                                const formattedNome = capitalizeWords(e.target.value); 
+                                setNome(formattedNome); }}  
+                            />
                         </div>
                         <div className='mt-4 col-lg-4 col-md-6 col-sm-12'>
-                            <TextField className='w-100' required label="Cognome" variant="outlined" color='tertiary' value={cognome} onChange={(e) => setCognome(e.target.value)} />
+                            <TextField className='w-100' required label="Cognome" variant="outlined" color='tertiary' value={cognome} 
+                                onChange={(e) => {
+                                const formattedCognome = capitalizeWords(e.target.value); 
+                                setCognome(formattedCognome); }}   
+                            />
                         </div>
 
                         {/* Optional Fields Section */}

@@ -259,3 +259,13 @@ button:active {
       display: none;
   }
 }
+
+.pSearch {
+  cursor: pointer;   
+  user-select: none;   
+  margin-bottom: 0px;
+}
+
+.pSearch:hover{
+  color: #5d82c0;
+}

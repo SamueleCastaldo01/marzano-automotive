@@ -73,7 +73,7 @@ export function LoginUser() {
               fullWidth
               margin="normal"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value.toLowerCase())}
             />
             
             {/* Campo password con pulsante per mostrare/nascondere */}

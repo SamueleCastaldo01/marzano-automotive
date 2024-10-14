@@ -27,22 +27,32 @@ export function CustomerList() {
   const [editOpen, setEditOpen] = useState(false);
   const [searchPhone, setSearchPhone] = useState(''); // Stato per il numero di telefono da cercare
   const [searchTarga, setSearchTarga] = useState(''); // Stato per il valore della targa da cercare
+  const [searchNome, setSearchNome] = useState('');  
+  const [searchCognome, setSearchCognome] = useState(''); 
+  const [searchType, setSearhType] = useState(''); 
 
   const handleEdit = (customerId) => {
     setEditCustomerId(customerId);
     setEditOpen(true);
   };
 
-  const fetchCustomers = async (telefono = '') => {
+  const fetchCustomers = async (searchType) => {
     try {
       setLoading(true); // Inizia il caricamento
       const customerCollection = collection(db, "customersTab");
   
       let customerQuery;
-      if (telefono) {
+      const lowerCaseNome = searchNome ? searchNome.toLowerCase() : null;
+      const lowerCaseCognome = searchCognome ? searchCognome.toLowerCase() : null;
+      if (searchPhone && searchType == "phone") {
         // Filtro per numero di telefono
-        customerQuery = query(customerCollection, where("telefono", "==", telefono));
-      } else {
+        customerQuery = query(customerCollection, where("telefono", "==", searchPhone));
+      } else if(searchNome && searchType == "nome") {
+        customerQuery = query(customerCollection, where("nome", "==", searchNome));
+      } else if(searchCognome && searchType == "cognome") {
+        customerQuery = query(customerCollection, where("cognome", "==", searchCognome));
+      }
+      else {
         // Crea una query per ordinare per dataCreazione in ordine decrescente se non c'è il filtro
         customerQuery = query(customerCollection, orderBy("dataCreazione", "desc"));
       }
@@ -106,6 +116,14 @@ export function CustomerList() {
     fetchCustomers();
   }, []);
 
+  const capitalizeWords = (str) => {
+    return str
+      .toLowerCase() // Converte l'intera stringa in minuscolo
+      .split(' ') // Divide la stringa in parole
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalizza la prima lettera di ogni parola
+      .join(' '); // Riunisce le parole in una stringa
+  };
+
   const handleTogglePassword = (id) => {
     setShowPassword((prev) => ({
       ...prev,
@@ -165,14 +183,32 @@ export function CustomerList() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchCustomers(searchPhone);
+    fetchCustomers("phone");
   };
+
+  const handleSearchNome = (e) => {
+    e.preventDefault();
+    fetchCustomers("nome");
+  };
+
+  const handleSearchCognome = (e) => {
+    e.preventDefault();
+    fetchCustomers("cognome");
+  };
+
 
   const handleSearchTarga = (e) => {
     e.preventDefault();
     fetchCustomerByTarga(searchTarga);
   };
 
+  const handleResetSearch = () => {
+    setSearchCognome("");
+    setSearchNome("");
+    setSearchPhone("");
+    setSearchTarga("");
+  }
+ 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     {
@@ -272,7 +308,15 @@ export function CustomerList() {
       <div className="container-fluid">
         <h2>Anagrafica Clienti</h2>
         <div className='d-flex justify-content-between align-items-center mt-4'>
-          <div className='d-flex'>
+          <div className='d-flex align-items-center gap-2'>
+            <p  className='mb-0'><strong>Ricerca per:</strong></p>
+            <div className='d-flex align-items-center gap-2'>
+            {searchType != "telefono" &&<p className='pSearch' onClick={() => {setSearhType("telefono")}}>Telefono</p>}
+            {searchType != "targa" &&<p className='pSearch' onClick={() => {setSearhType("targa")}}>Targa</p>}
+            {searchType != "nome" && <p className='pSearch' onClick={() => {setSearhType("nome")}}>Nome</p> }
+            {searchType != "cognome" && <p className='pSearch' onClick={() => {setSearhType("cognome")}}>Cognome</p>}
+            </div>
+          {searchType == "telefono" &&
           <form className="d-flex align-items-center" onSubmit={handleSearch}>
             <TextField
               style={{width: "165px"}}
@@ -291,6 +335,8 @@ export function CustomerList() {
               Cerca
             </Button>
           </form>
+          }
+          {searchType == "targa" &&
           <form className="d-flex align-items-center" onSubmit={handleSearchTarga}>
             <TextField
               style={{width: "140px"}}
@@ -309,9 +355,56 @@ export function CustomerList() {
               Cerca
             </Button>
           </form>
+          }
+          {searchType == "nome" &&
+          <form className="d-flex align-items-center" onSubmit={handleSearchNome}>
+            <TextField
+              style={{width: "180px"}}
+              label="Cerca per Nome"
+              variant="outlined"
+              className="me-2"
+              value={searchNome}
+              onChange={(e) => {
+                const formattedName = capitalizeWords(e.target.value); // Capitalizza il valore inserito
+                setSearchNome(formattedName); // Aggiorna lo stato con il valore formattato
+              }}  // Aggiorna lo stato con il valore inserito
+            />
+            <Button
+              className="me-2"
+              type="submit"
+              color="primary"
+              variant="contained"
+            >
+              Cerca
+            </Button>
+          </form>
+          }
+          {searchType == "cognome" &&
+          <form className="d-flex align-items-center" onSubmit={handleSearchCognome}>
+            <TextField
+              style={{width: "180px"}}
+              label="Cerca per Cognome"
+              variant="outlined"
+              className="me-2"
+              value={searchCognome}
+              onChange={(e) => {
+                const formattedCognome = capitalizeWords(e.target.value); // Capitalizza il valore inserito
+                setSearchCognome(formattedCognome); // Aggiorna lo stato con il valore formattato
+              }}  // Aggiorna lo stato con il valore inserito
+            />
+            <Button
+              className="me-2"
+              type="submit"
+              color="primary"
+              variant="contained"
+            >
+              Cerca
+            </Button>
+          </form>
+          }
           </div>
           <div>
-            <IconButton variant="contained" onClick={() => {fetchCustomers()}}>
+            <IconButton variant="contained" onClick={() => {fetchCustomers(""); setSearhType(""); handleResetSearch()}}>
               <RefreshIcon/>
             </IconButton>
             <Button
