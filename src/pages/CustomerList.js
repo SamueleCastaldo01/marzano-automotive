@@ -2,6 +2,7 @@ import { styled, ThemeProvider } from '@mui/material/styles';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import { itIT } from "@mui/x-data-grid/locales";
+import CircularProgress from '@mui/material/CircularProgress';
 import { Paper, IconButton, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { db } from "../firebase-config";
@@ -16,6 +17,7 @@ import { EditCliente } from '../components/EditCliente';
 
 export function CustomerList() {
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
@@ -33,47 +35,54 @@ export function CustomerList() {
 
   const fetchCustomers = async (telefono = '') => {
     try {
-        const customerCollection = collection(db, "customersTab");
-
-        let customerQuery;
-        if (telefono) {
-            // Filtro per numero di telefono
-            customerQuery = query(customerCollection, where("telefono", "==", telefono));
-        } else {
-            // Crea una query per ordinare per dataCreazione in ordine decrescente se non c'è il filtro
-            customerQuery = query(customerCollection, orderBy("dataCreazione", "desc"));
-        }
-
-        const customerSnapshot = await getDocs(customerQuery);
-        const customerList = customerSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
-
-        setCustomers(customerList);
+      setLoading(true); // Inizia il caricamento
+      const customerCollection = collection(db, "customersTab");
+  
+      let customerQuery;
+      if (telefono) {
+        // Filtro per numero di telefono
+        customerQuery = query(customerCollection, where("telefono", "==", telefono));
+      } else {
+        // Crea una query per ordinare per dataCreazione in ordine decrescente se non c'è il filtro
+        customerQuery = query(customerCollection, orderBy("dataCreazione", "desc"));
+      }
+  
+      const customerSnapshot = await getDocs(customerQuery);
+      const customerList = customerSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      setCustomers(customerList);
     } catch (error) {
-        console.error("Errore nel recupero dei dati dei clienti: ", error);
+      console.error("Errore nel recupero dei dati dei clienti: ", error);
+    } finally {
+      setLoading(false); // Termina il caricamento
     }
   };
+  
 
   const fetchCustomerByTarga = async (targa) => {
     try {
+      setLoading(true); // Inizia il caricamento
       const veicoloCollection = collection(db, "veicoloTab");
       const veicoloQuery = query(veicoloCollection, where("targa", "==", targa));
       const veicoloSnapshot = await getDocs(veicoloQuery);
-
+  
       if (!veicoloSnapshot.empty) {
         const veicolo = veicoloSnapshot.docs[0].data(); // Recupera il primo documento trovato
         const idCustomer = veicolo.idCustomer;
-
+  
         // Una volta ottenuto l'idCustomer, cerca il cliente corrispondente
-        fetchCustomersById(idCustomer);
+        await fetchCustomersById(idCustomer);
       } else {
         console.log("Nessun veicolo trovato con questa targa");
         setCustomers([]); // Resetta la lista dei clienti se non ci sono risultati
       }
     } catch (error) {
       console.error("Errore nella ricerca del cliente per targa: ", error);
+    } finally {
+      setLoading(false); // Termina il caricamento
     }
   };
 
@@ -328,16 +337,22 @@ export function CustomerList() {
           </div>
         </div>
         <ThemeProvider theme={theme}>
-          <Paper className='mt-4' sx={{ height: 500, borderRadius: '8px', overflowX: "auto" }}>
-            <StyledDataGrid
-              onCellClick={() => {}}
-              rows={customers}
-              columns={columns}
-              checkboxSelection
-              disableRowSelectionOnClick
-              onRowSelectionModelChange={handleRowSelectionChange}
-              localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
-            />
+          <Paper className='mt-4' sx={{ height: 500, borderRadius: '8px', overflowX: "auto", position: "relative" }}>
+            {loading ? (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <CircularProgress />
+              </div>
+            ) : (
+              <StyledDataGrid
+                onCellClick={() => {}}
+                rows={customers}
+                columns={columns}
+                checkboxSelection
+                disableRowSelectionOnClick
+                onRowSelectionModelChange={handleRowSelectionChange}
+                localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
+              />
+            )}
           </Paper>
         </ThemeProvider>
         <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)} message="Cliente eliminato!" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} />

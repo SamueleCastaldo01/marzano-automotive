@@ -83,23 +83,23 @@ const TargaInput = ({
   return (
     <>
       <div className="mt-4 d-flex">
-        <Autocomplete
-          options={recentTarghe}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Targa"
-              variant="outlined"
-              onChange={(e) => handleTargaChange(e.target.value)}
-              style={{ marginRight: "10px", width: "200px" }}
-            />
-          )}
-          value={targa}
-          onInputChange={(event, newInputValue) => {
-            handleTargaChange(newInputValue);
-          }}
-          freeSolo
-        />
+      <Autocomplete
+        options={recentTarghe}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Targa"
+            variant="outlined"
+            onChange={(e) => handleTargaChange(e.target.value.toUpperCase())} // Converti a Uppercase
+            style={{ marginRight: "10px", width: "200px" }}
+          />
+        )}
+        value={targa}
+        onInputChange={(event, newInputValue) => {
+          handleTargaChange(newInputValue.toUpperCase()); // Converti a Uppercase
+        }}
+        freeSolo
+      />
         <Button
           className="me-2"
           variant="contained"

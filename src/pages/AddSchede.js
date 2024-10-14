@@ -108,6 +108,8 @@ export function AddSchede() {
         sconto: "",
         totale: "",
       }];
+
+      const dataLocale = new Date();
   
       const nuovaScheda = {
         idCustomer: idCust,
@@ -117,7 +119,7 @@ export function AddSchede() {
         telefono,
         veicolo,
         chilometraggio: 0,
-        dataCreazione: Timestamp.now(),
+        dataCreazione: Timestamp.fromDate(dataLocale),
         dataScheda,
         manodopera, 
         totale: "0",

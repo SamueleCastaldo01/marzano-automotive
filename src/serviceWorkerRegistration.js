@@ -67,15 +67,15 @@ function registerValidSW(swUrl, config) {
               // At this point, the updated precached content has been fetched,
               // but the previous service worker will still serve the older
               // content until all client tabs are closed.
-              console.log(
-                'New content is available and will be used when all ' +
-                  'tabs for this page are closed. See https://cra.link/PWA.'
-              );
+              console.log('New content is available; refreshing the page.');
 
-              // Execute callback
+              // Forza il refresh immediato della pagina quando è disponibile un nuovo Service Worker.
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
+
+              // Aggiungi questa riga per ricaricare automaticamente la pagina
+              window.location.reload();
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a

@@ -8,11 +8,9 @@ import {
   deleteDoc,
   doc,
   query,
-  limit,
-  orderBy,
-  where, // Importa 'where' per filtrare i documenti
+  where,
 } from "firebase/firestore";
-import { db } from "../firebase-config"; // Assicurati che il percorso sia corretto
+import { db } from "../firebase-config"; 
 import {
   Paper,
   Button,
@@ -23,7 +21,8 @@ import {
   DialogTitle,
   Snackbar,
   IconButton,
-  TextField, // Importa TextField per l'input
+  TextField,
+  CircularProgress, // Importa CircularProgress
 } from "@mui/material";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { StyledDataGrid, theme } from "../components/StyledDataGrid";
@@ -36,44 +35,42 @@ export function SchedeDiLavoro() {
   const [selectedWorkCardIds, setSelectedWorkCardIds] = useState([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Stato per l'input di ricerca
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [loading, setLoading] = useState(false); // Stato per il caricamento
 
   const fetchWorkCards = async (search = "") => {
+    setLoading(true); // Inizia il caricamento
     try {
       const workCardCollection = collection(db, "schedaDiLavoroTab");
-  
       let workCardQuery;
+
       if (search) {
-        // Trasformiamo la ricerca in uppercase
         const uppercaseSearch = search.toUpperCase();
-        
-        // Se c'è un termine di ricerca, usa where per filtrare i risultati
         workCardQuery = query(
           workCardCollection,
-          where("targa", "==", uppercaseSearch) // Applica il filtro in uppercase
+          where("targa", "==", uppercaseSearch) 
         );
       } else {
-        // Altrimenti, recupera le schede senza filtro
         workCardQuery = query(workCardCollection);
       }
-  
+
       const workCardSnapshot = await getDocs(workCardQuery);
       const workCardList = workCardSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-  
-      // Ordina manualmente l'array per data di creazione dal più recente
+
       workCardList.sort((a, b) => {
-        const dateA = a.dataCreazione ? a.dataCreazione.toDate() : null; // Assicurati di avere una data valida
+        const dateA = a.dataCreazione ? a.dataCreazione.toDate() : null;
         const dateB = b.dataCreazione ? b.dataCreazione.toDate() : null;
-        return dateB - dateA; // Ordina in ordine decrescente
+        return dateB - dateA; 
       });
-  
-      // Imposta le schede di lavoro
+
       setWorkCards(workCardList);
     } catch (error) {
       console.error("Errore nel recupero delle schede di lavoro: ", error);
+    } finally {
+      setLoading(false); // Ferma il caricamento
     }
   };
 
@@ -85,7 +82,6 @@ export function SchedeDiLavoro() {
     setSelectedWorkCardIds(newSelection);
   };
 
-  //delete---------------------------------------------------
   const handleDelete = async () => {
     const deletePromises = selectedWorkCardIds.map((id) =>
       deleteDoc(doc(db, "schedaDiLavoroTab", id))
@@ -100,7 +96,7 @@ export function SchedeDiLavoro() {
       );
       setConfirmOpen(false);
       setSelectedWorkCardIds([]);
-      setSnackbarOpen(true); // Mostra la Snackbar dopo l'eliminazione
+      setSnackbarOpen(true); 
     } catch (error) {
       console.error(
         "Errore durante l'eliminazione delle schede di lavoro: ",
@@ -122,13 +118,12 @@ export function SchedeDiLavoro() {
   };
 
   const handleSearchChange = (event) => {
-    // Aggiorna lo stato dell'input di ricerca trasformandolo in uppercase
     setSearchTerm(event.target.value.toUpperCase());
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchWorkCards(searchTerm); // Effettua la ricerca quando l'input cambia
+    fetchWorkCards(searchTerm); 
   };
 
   const columns = [
@@ -158,7 +153,7 @@ export function SchedeDiLavoro() {
             navigate("/dashboardcustomer/" + params.row.idCustomer);
           }}
         >
-          {params.row.cliente}
+          {params.row.username}
         </span>
       ),
     },
@@ -199,7 +194,7 @@ export function SchedeDiLavoro() {
                 label="Cerca per Targa"
                 variant="outlined"
                 value={searchTerm}
-                onChange={handleSearchChange} // Gestisci l'input di ricerca
+                onChange={handleSearchChange}
                 className="me-2"
               />
               <Button
@@ -212,9 +207,9 @@ export function SchedeDiLavoro() {
               </Button>
             </form>
             <div className="d-flex align-items-center">
-            <IconButton variant="contained" onClick={() => {fetchWorkCards()}}>
-              <RefreshIcon/>
-            </IconButton>
+              <IconButton variant="contained" onClick={() => {fetchWorkCards()}}>
+                <RefreshIcon/>
+              </IconButton>
               <Button
                 className="me-2"
                 color="primary"
@@ -243,20 +238,25 @@ export function SchedeDiLavoro() {
               className="mt-4"
               sx={{ height: 450, borderRadius: "8px", overflowX: "auto" }}
             >
-              <StyledDataGrid
-                rows={workCards}
-                columns={columns}
-                checkboxSelection
-                disableRowSelectionOnClick
-                onRowSelectionModelChange={handleRowSelectionChange}
-                localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
-              />
+              {loading ? ( // Mostra il caricamento se loading è true
+                <div className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
+                  <CircularProgress />
+                </div>
+              ) : (
+                <StyledDataGrid
+                  rows={workCards}
+                  columns={columns}
+                  checkboxSelection
+                  disableRowSelectionOnClick
+                  onRowSelectionModelChange={handleRowSelectionChange}
+                  localeText={itIT.components.MuiDataGrid.defaultProps.localeText}
+                />
+              )}
             </Paper>
           </ThemeProvider>
         </div>
       </motion.div>
 
-      {/* Dialog di conferma eliminazione */}
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
         <DialogTitle style={{ backgroundColor: "#1E1E1E" }}>
           Conferma Eliminazione
@@ -278,7 +278,6 @@ export function SchedeDiLavoro() {
         </DialogActions>
       </Dialog>
 
-      {/* Snackbar per conferma eliminazione */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={2000}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Button, Checkbox } from "@mui/material";
+import { TextField, Button, Checkbox, CircularProgress, } from "@mui/material";
 import { db } from "../firebase-config";
 import { motion } from "framer-motion";
+import moment from "moment";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,6 +22,7 @@ const AggiungiScheda = ({  }) => {
   const [dataCorrente, setDataCorrente] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [pagato, setPagato] = useState("");
+  const [loading, setLoading] = useState(true);
   const [resta, setResta] = useState(0);
   const [sconto, setSconto] = useState("");
   const [chilometraggio, setChilometraggio] = useState(0);
@@ -28,20 +30,27 @@ const AggiungiScheda = ({  }) => {
   const navigate = useNavigate();
 
   const fetchData = async () => {
+    setLoading(true);
     if (!id) return;
-
+  
     const docRef = doc(db, "schedaDiLavoroTab", id);
     const docSnap = await getDoc(docRef);
-
+  
     if (docSnap.exists()) {
       const data = docSnap.data();
       setInfoScheda(data);
       setPagato(data.pagato);
       setResta(data.resta || 0);
       setSconto(data.sconto || 0);
-      setChilometraggio(data.chilometraggio ||0);
+      
+      // Usa moment per formattare il timestamp
+      const formattedDate = data.dataCreazione ? moment(data.dataCreazione.toDate()).format("DD/MM/YYYY") : "";
+      setDataCorrente(formattedDate);
+      
+      setChilometraggio(data.chilometraggio || 0);
       setDataScheda(data.dataScheda || []);
       setManodopera(data.manodopera || []);
+      setLoading(false);
     } else {
       console.log("Nessun documento trovato!");
     }
@@ -51,13 +60,6 @@ const AggiungiScheda = ({  }) => {
     fetchData();
   }, [id]);
 
-  useEffect(() => {
-    const oggi = new Date();
-    const giorno = String(oggi.getDate()).padStart(2, "0");
-    const mese = String(oggi.getMonth() + 1).padStart(2, "0");
-    const anno = String(oggi.getFullYear()).slice(2);
-    setDataCorrente(`${giorno}/${mese}/${anno}`);
-  }, []);
 
   const handleAddDescription = async () => {
     const newItem = {
@@ -359,6 +361,8 @@ const AggiungiScheda = ({  }) => {
           <h5 className="mb-0">Totale</h5>
         </div>
       </div>
+
+      {loading && <div className="text-center"><CircularProgress/></div>}
 
       {dataScheda.map((item, index) => (
         <div className="row d-flex align-items-center" key={index}>
