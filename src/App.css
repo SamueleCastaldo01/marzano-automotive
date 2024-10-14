@@ -269,3 +269,7 @@ button:active {
 .pSearch:hover{
   color: #5d82c0;
 }
+
+.pSearch.active {
+  color: #5d82c0;
+}

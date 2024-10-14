@@ -29,7 +29,7 @@ export function CustomerList() {
   const [searchTarga, setSearchTarga] = useState(''); // Stato per il valore della targa da cercare
   const [searchNome, setSearchNome] = useState('');  
   const [searchCognome, setSearchCognome] = useState(''); 
-  const [searchType, setSearhType] = useState(''); 
+  const [searchType, setSearhType] = useState('targa'); 
 
   const handleEdit = (customerId) => {
     setEditCustomerId(customerId);
@@ -311,10 +311,10 @@ export function CustomerList() {
           <div className='d-flex flex-column  gap-2'>
             <div className='d-flex align-items-center gap-2'>
               <p className='mb-0'><strong>Ricerca per:</strong></p>
-              <p className='pSearch' onClick={() => {setSearhType("nome")}}>Nome</p> 
-              <p className='pSearch' onClick={() => {setSearhType("cognome")}}>Cognome</p>
-              <p className='pSearch' onClick={() => {setSearhType("telefono")}}>Telefono</p>
-              <p className='pSearch' onClick={() => {setSearhType("targa")}}>Targa</p>
+              <p className={`pSearch ${searchType === "nome" ? "active" : ""}`}  onClick={() => {setSearhType("nome")}}>Nome</p> 
+              <p className={`pSearch ${searchType === "cognome" ? "active" : ""}`} onClick={() => {setSearhType("cognome")}}>Cognome</p>
+              <p className={`pSearch ${searchType === "telefono" ? "active" : ""}`} onClick={() => {setSearhType("telefono")}}>Telefono</p>
+              <p className={`pSearch ${searchType === "targa" ? "active" : ""}`} onClick={() => {setSearhType("targa")}}>Targa</p>
             </div>
           {searchType == "telefono" &&
           <form className="d-flex align-items-center" onSubmit={handleSearch}>
@@ -404,7 +404,7 @@ export function CustomerList() {
           }
           </div>
           <div>
-            <IconButton variant="contained" onClick={() => {fetchCustomers(""); setSearhType(""); handleResetSearch()}}>
+            <IconButton variant="contained" onClick={() => {fetchCustomers(""); handleResetSearch()}}>
               <RefreshIcon/>
             </IconButton>
             <Button
