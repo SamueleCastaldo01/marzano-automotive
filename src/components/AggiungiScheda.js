@@ -132,7 +132,48 @@ const AggiungiScheda = ({  }) => {
     });
   };
 
-  const handleManodoperaFieldChange = async (index, field, value) => {
+
+
+
+
+  //----------------------------------------------------
+  //mi serve sarebbe input riga descrizione, me lo salva anche nel database
+  const handleLocalFieldChange = (index, field, value) => {
+    const updatedDataScheda = [...dataScheda];
+    updatedDataScheda[index][field] = value; // Aggiorna solo lo stato locale
+    setDataScheda(updatedDataScheda);
+  };
+
+  const handleFieldSave = async (index, field, value) => {
+    const updatedDataScheda = [...dataScheda];
+    updatedDataScheda[index][field] = value;
+  
+    const qt = Number(updatedDataScheda[index].qt) || 0;
+    const prezzo = Number(updatedDataScheda[index].prezzo) || 0;
+    const sconto = Number(updatedDataScheda[index].sconto) || 0;
+    updatedDataScheda[index].totale = (
+      prezzo *
+      qt *
+      (1 - sconto / 100)
+    ).toFixed(2);
+  
+    setDataScheda(updatedDataScheda);
+    
+    // Salvataggio nel database
+    await updateDataSchedaInDatabase(updatedDataScheda);
+  
+    const totaleComplessivo = calculateTotal(manodopera, updatedDataScheda);
+    await updateTotalInDatabase(totaleComplessivo);
+  };
+ //------------------------------------------------------------  
+  //qui sarebbe la stessa cosa di sopra solamente che riguarda
+  const handleLocalManodoperaChange = (index, field, value) => {
+    const updatedManodopera = [...manodopera];
+    updatedManodopera[index][field] = value; // Aggiorna lo stato locale
+    setManodopera(updatedManodopera);
+  };
+
+  const handleManodoperaFieldSave = async (index, field, value) => {
     const updatedManodopera = [...manodopera];
     updatedManodopera[index][field] = value;
 
@@ -146,31 +187,21 @@ const AggiungiScheda = ({  }) => {
     ).toFixed(2);
 
     setManodopera(updatedManodopera);
+
+    // Salvataggio nel database
     await updateManodoperaInDatabase(updatedManodopera);
 
     const totaleComplessivo = calculateTotal(updatedManodopera, dataScheda);
     await updateTotalInDatabase(totaleComplessivo);
   };
 
-  const handleFieldChange = async (index, field, value) => {
-    const updatedDataScheda = [...dataScheda];
-    updatedDataScheda[index][field] = value;
-
-    const qt = Number(updatedDataScheda[index].qt) || 0;
-    const prezzo = Number(updatedDataScheda[index].prezzo) || 0;
-    const sconto = Number(updatedDataScheda[index].sconto) || 0;
-    updatedDataScheda[index].totale = (
-      prezzo *
-      qt *
-      (1 - sconto / 100)
-    ).toFixed(2);
-
-    setDataScheda(updatedDataScheda);
-    await updateDataSchedaInDatabase(updatedDataScheda);
-
-    const totaleComplessivo = calculateTotal(manodopera, updatedDataScheda);
-    await updateTotalInDatabase(totaleComplessivo);
+  const updateManodoperaInDatabase = async (updatedManodopera) => {
+    const docRef = doc(db, "schedaDiLavoroTab", id);
+    await updateDoc(docRef, {
+      manodopera: updatedManodopera,
+    });
   };
+ //------------------------------------------------------------  
 
   const handleCheckboxChange = (index) => {
     const updatedSelectedItems = [...selectedItems];
@@ -216,13 +247,6 @@ const AggiungiScheda = ({  }) => {
     const docRef = doc(db, "schedaDiLavoroTab", id);
     await updateDoc(docRef, {
       dataScheda: updatedDataScheda,
-    });
-  };
-
-  const updateManodoperaInDatabase = async (updatedManodopera) => {
-    const docRef = doc(db, "schedaDiLavoroTab", id);
-    await updateDoc(docRef, {
-      manodopera: updatedManodopera,
     });
   };
 
@@ -372,15 +396,15 @@ const AggiungiScheda = ({  }) => {
               onChange={() => handleCheckboxChange(index)}
             />
           </div>
+          {/**DESCRIZIONE ----------------------------------------------------------------------------------------------------- */}
           <div className="descrizione px-0 col-4 text-center">
             <TextField
               className="w-100 h-100 mt-2"
               variant="outlined"
               color="tertiary"
               value={item.descrizione || ""}
-              onChange={(e) =>
-                handleFieldChange(index, "descrizione", e.target.value)
-              }
+              onChange={(e) => handleLocalFieldChange(index, "descrizione", e.target.value)}
+              onBlur={(e) => handleFieldSave(index, "descrizione", e.target.value)}
             />
           </div>
           <div className="note px-0 col-3 text-center">
@@ -389,9 +413,8 @@ const AggiungiScheda = ({  }) => {
               variant="outlined"
               color="tertiary"
               value={item.note || ""}
-              onChange={(e) =>
-                handleFieldChange(index, "note", e.target.value)
-              }
+              onChange={(e) => handleLocalFieldChange(index, "note", e.target.value)}
+              onBlur={(e) => handleFieldSave(index, "note", e.target.value)}
             />
           </div>
           <div className="qt px-0 col-1 text-center">
@@ -401,7 +424,8 @@ const AggiungiScheda = ({  }) => {
               color="tertiary"
               type="number"
               value={item.qt || ""}
-              onChange={(e) => handleFieldChange(index, "qt", e.target.value)}
+              onChange={(e) => handleLocalFieldChange(index, "qt", e.target.value)}
+              onBlur={(e) => handleFieldSave(index, "qt", e.target.value)}
             />
           </div>
           <div className="prezzo px-0 col-1 text-center">
@@ -416,9 +440,8 @@ const AggiungiScheda = ({  }) => {
               }}
               type="number"
               value={item.prezzo || ""}
-              onChange={(e) =>
-                handleFieldChange(index, "prezzo", e.target.value)
-              }
+              onChange={(e) => handleLocalFieldChange(index, "prezzo", e.target.value)}
+              onBlur={(e) => handleFieldSave(index, "prezzo", e.target.value)}
             />
           </div>
           <div className="sconto % px-0 col-1 text-center">
@@ -433,9 +456,8 @@ const AggiungiScheda = ({  }) => {
               }}
               type="number"
               value={item.sconto || ""}
-              onChange={(e) =>
-                handleFieldChange(index, "sconto", e.target.value)
-              }
+              onChange={(e) => handleLocalFieldChange(index, "sconto", e.target.value)}
+              onBlur={(e) => handleFieldSave(index, "sconto", e.target.value)}
             />
           </div>
           <div className="totale ps-0 col-1 text-center">
@@ -458,6 +480,7 @@ const AggiungiScheda = ({  }) => {
       {manodopera.map((item, index) => (
         <div className="row d-flex align-items-center" key={index}>
           <div className="descrizione pe-0 col-1 text-center"></div>
+      {/**MANODOPERA ----------------------------------------------------------------------------------------------------- */}
           <div className="descrizione px-0 col-7 text-center">
             <TextField
               className="w-100 h-100 mt-2"
@@ -474,9 +497,8 @@ const AggiungiScheda = ({  }) => {
               color="tertiary"
               type="number"
               value={item.qt || ""}
-              onChange={(e) =>
-                handleManodoperaFieldChange(index, "qt", e.target.value)
-              }
+              onChange={(e) => handleLocalManodoperaChange(index, "qt", e.target.value)}
+              onBlur={(e) => handleManodoperaFieldSave(index, "qt", e.target.value)}
             />
           </div>
           <div className="prezzo px-0 col-1 text-center">
@@ -491,9 +513,8 @@ const AggiungiScheda = ({  }) => {
               }}
               type="number"
               value={item.prezzo || ""}
-              onChange={(e) =>
-                handleManodoperaFieldChange(index, "prezzo", e.target.value)
-              }
+              onChange={(e) => handleLocalManodoperaChange(index, "prezzo", e.target.value)}
+              onBlur={(e) => handleManodoperaFieldSave(index, "prezzo", e.target.value)}
             />
           </div>
           <div className="sconto % px-0 col-1 text-center">
@@ -508,9 +529,8 @@ const AggiungiScheda = ({  }) => {
               }}
               type="number"
               value={item.sconto || ""}
-              onChange={(e) =>
-                handleManodoperaFieldChange(index, "sconto", e.target.value)
-              }
+              onChange={(e) => handleLocalManodoperaChange(index, "sconto", e.target.value)}
+              onBlur={(e) => handleManodoperaFieldSave(index, "sconto", e.target.value)}
             />
           </div>
           <div className="totale ps-0 col-1 text-center">
@@ -531,6 +551,7 @@ const AggiungiScheda = ({  }) => {
       ))}
 
       <div className="row">
+         {/**TOTALI ----------------------------------------------------------------------------------------------------- */}
         <div className="col-8 pe-0"></div>
         <div className="col-4 ps-0">
           <TextField
