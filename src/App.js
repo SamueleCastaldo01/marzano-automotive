@@ -16,6 +16,7 @@ import { tutti, supa } from './components/utenti';
 import { useDispatch, useSelector } from "react-redux";
 import { loginU, logoutU } from './redux/reducers/authSlice'; 
 import { loginUser, logoutUser } from './redux/reducers/userAuthSlice';
+import { Button, Snackbar } from '@mui/material'; // Importa Snackbar e Button
 
 // Styled BottomNavigationAction
 const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
@@ -23,11 +24,14 @@ const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
 `);
 
 function App() {
-  //const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
   const matches = useMediaQuery("(max-width:920px)");
   const auth = getAuth();
   const dispatch = useDispatch();
   const isAuth = useSelector(state => state.auth.isAuth);
+
+  // Stato per gestire il prompt di installazione
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
     // Monitoraggio dello stato di autenticazione
@@ -40,14 +44,48 @@ function App() {
       }
     });
 
-    return () => unsubscribe(); // Cleanup all'unmount del componente
+    // Aggiungi un event listener per intercettare il prompt di installazione
+    const handleBeforeInstallPrompt = (e) => {
+      // Previeni il prompt automatico
+      e.preventDefault();
+      // Salva l'evento in deferredPrompt
+      setDeferredPrompt(e);
+      // Mostra il pulsante o il popup per l'installazione
+      setShowInstallPrompt(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      unsubscribe(); // Cleanup all'unmount del componente
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
   }, [auth, dispatch]);
+
+  // Funzione per gestire l'installazione
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      // Mostra il prompt di installazione nativo del browser
+      deferredPrompt.prompt();
+      // Controlla il risultato della scelta dell'utente
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        // Reset della variabile deferredPrompt
+        setDeferredPrompt(null);
+        setShowInstallPrompt(false);
+      });
+    }
+  };
 
   // SignOut function
   const signUserOut = () => {
     signOut(auth).then(() => {
       dispatch(logoutU()); // Usa logoutU qui
-      dispatch(logoutUser());  //logout per l'utente
+      dispatch(logoutUser());  // Logout per l'utente
     });
   };
 
@@ -60,6 +98,20 @@ function App() {
 
       {/* Mostra BottomNavi solo su schermi piccoli */}
       {matches && <BottomNavi />}
+      
+      {/* Mostra il popup di installazione se disponibile */}
+      <Snackbar
+  open={showInstallPrompt}
+  onClose={() => setShowInstallPrompt(false)}
+  message="Vuoi installare questa app?"
+  action={
+    <Button color="secondary" onClick={handleInstallClick}>
+      Installa
+    </Button>
+  }
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Posizione sopra
+  sx={{ position: 'fixed', top: '16px', left: '50%', transform: 'translateX(-50%)', zIndex: 1300 }} // Imposta la posizione
+/>
     </Router>
   );
 }
@@ -71,7 +123,7 @@ function AppContent({ signUserOut, matches }) {
   // Verifica se l'utente si trova nelle pagine di login o block
   const isLoginPage = location.pathname === "/login";
   const isBlockPage = location.pathname === "/block";
-  let ta= supa.includes(localStorage.getItem("uid"))
+  let ta = supa.includes(localStorage.getItem("uid"));
   const isAuth = useSelector(state => state.auth.isAuth);
 
   return (
@@ -80,21 +132,21 @@ function AppContent({ signUserOut, matches }) {
       {!matches && !isLoginPage && !isBlockPage && ta && isAuth && <MiniDrawer signUserOut={signUserOut} />}
 
       <Box
-  component="main"
-  sx={{
-    flexGrow: 1,
-    p: 3,
-    padding: matches ? 0 : "24px",
-    paddingTop: "24px",
-    overflowX: "hidden", // Impedisce lo scroll orizzontale
-  }}
->
-  <ToastContainer limit={1} />
-  {/* Render delle rotte animate */}
-  <div style={{ marginTop: !matches && "50px" }}>
-    <AnimateRoutes />
-  </div>
-</Box>
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          padding: matches ? 0 : "24px",
+          paddingTop: "24px",
+          overflowX: "hidden", // Impedisce lo scroll orizzontale
+        }}
+      >
+        <ToastContainer limit={1} />
+        {/* Render delle rotte animate */}
+        <div style={{ marginTop: !matches && "50px" }}>
+          <AnimateRoutes />
+        </div>
+      </Box>
     </>
   );
 }
