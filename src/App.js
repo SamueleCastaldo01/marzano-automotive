@@ -100,18 +100,25 @@ function App() {
       {matches && <BottomNavi />}
       
       {/* Mostra il popup di installazione se disponibile */}
-      <Snackbar
-  open={showInstallPrompt}
-  onClose={() => setShowInstallPrompt(false)}
-  message="Vuoi installare questa app?"
-  action={
-    <Button color="secondary" onClick={handleInstallClick}>
-      Installa
-    </Button>
-  }
-  anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Posizione sopra
-  sx={{ position: 'fixed', top: '16px', left: '50%', transform: 'translateX(-50%)', zIndex: 1300 }} // Imposta la posizione
-/>
+    <Snackbar
+        open={showInstallPrompt}
+        onClose={() => setShowInstallPrompt(false)}
+        message="Vuoi installare questa app?"
+        action={
+          <Button color="secondary" onClick={handleInstallClick}>
+            Installa
+          </Button>
+        }
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Posizione sopra
+        sx={{
+          position: 'fixed',
+          top: '50%', // Posiziona al centro verticale
+          left: '50%', // Posiziona al centro orizzontale
+          transform: 'translate(-50%, -50%)', // Centra perfettamente
+          zIndex: 1300,
+        }} // Imposta la posizione
+    />
+
     </Router>
   );
 }
